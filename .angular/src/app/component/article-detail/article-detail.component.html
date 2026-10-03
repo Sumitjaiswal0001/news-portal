@@ -1,0 +1,1134 @@
+<app-header></app-header>
+
+<main class="bg-white text-slate-900 min-h-screen pb-16 font-sans">
+
+  <!-- ========================================================= -->
+  <!-- PAGE CONTAINER -->
+  <!-- ========================================================= -->
+
+  <!-- Skeleton Shimmer Loader for Article Detail Page -->
+  <div *ngIf="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6 animate-pulse">
+    <div class="h-6 bg-slate-200 rounded w-1/3"></div>
+    <div class="h-10 bg-slate-300 rounded w-3/4"></div>
+    <div class="h-4 bg-slate-200 rounded w-1/4"></div>
+    <div class="h-96 bg-slate-200 rounded-2xl w-full"></div>
+    <div class="space-y-3">
+      <div class="h-4 bg-slate-200 rounded w-full"></div>
+      <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+      <div class="h-4 bg-slate-200 rounded w-4/5"></div>
+      <div class="h-4 bg-slate-200 rounded w-full"></div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="!isLoading && article"
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6"
+  >
+
+    <!-- ========================================================= -->
+    <!-- BREADCRUMB -->
+    <!-- ========================================================= -->
+
+    <nav
+      class="flex flex-wrap items-center gap-2 text-xs text-slate-600 mb-6
+             bg-white px-4 py-3 rounded-xl border border-slate-200 shadow-sm"
+    >
+
+      <a
+        routerLink="/home"
+        class="font-medium hover:text-red-600 transition"
+      >
+        मुख्य पृष्ठ
+      </a>
+
+      <span class="text-slate-400">/</span>
+
+      <span class="text-red-600 font-bold">
+        📍 {{ article.districtName }}
+      </span>
+
+      <span class="text-slate-400">/</span>
+
+      <span class="text-slate-700 font-medium">
+        {{ article.categoryName }}
+      </span>
+
+    </nav>
+
+
+    <!-- ========================================================= -->
+    <!-- ARTICLE + TRENDING LAYOUT -->
+    <!-- ARTICLE = LEFT -->
+    <!-- TRENDING = RIGHT -->
+    <!-- ========================================================= -->
+
+    <div
+      class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+    >
+
+      <!-- ======================================================= -->
+      <!-- LEFT : ARTICLE DETAILS -->
+      <!-- ======================================================= -->
+
+      <section class="lg:col-span-8 min-w-0">
+
+        <!-- ===================================================== -->
+        <!-- ARTICLE HEADER -->
+        <!-- ===================================================== -->
+
+        <header class="mb-7">
+
+          <!-- Category / District / Breaking -->
+
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+
+            <span
+              class="bg-red-600 text-white font-bold text-xs
+                     px-3 py-1.5 rounded-full shadow-sm"
+            >
+              {{ article.categoryName }}
+            </span>
+
+            <span
+              class="bg-amber-400 text-slate-950 font-bold text-xs
+                     px-3 py-1.5 rounded-full shadow-sm"
+            >
+              📍 {{ article.districtName }}
+            </span>
+
+            <span
+              *ngIf="article.isBreaking"
+              class="bg-red-600 text-white font-extrabold text-xs
+                     px-3 py-1.5 rounded-full shadow animate-pulse"
+            >
+              ⚡ ब्रेकिंग न्यूज़
+            </span>
+
+          </div>
+
+
+          <!-- ================================================= -->
+          <!-- TITLE -->
+          <!-- ================================================= -->
+
+          <h1
+            class="text-2xl sm:text-3xl lg:text-4xl
+                   font-black text-slate-900
+                   font-serif leading-tight"
+          >
+            {{ article.title }}
+          </h1>
+
+
+          <!-- ================================================= -->
+          <!-- SUBTITLE -->
+          <!-- ================================================= -->
+
+          <p
+            *ngIf="article.subtitle"
+            class="mt-4 text-base sm:text-lg
+                   text-slate-700 leading-relaxed
+                   border-l-4 border-red-600
+                   pl-4"
+          >
+            {{ article.subtitle }}
+          </p>
+
+
+          <!-- ================================================= -->
+          <!-- META INFORMATION -->
+          <!-- ================================================= -->
+
+          <div
+            class="mt-6 border-y border-slate-200
+                   py-4 flex flex-col sm:flex-row
+                   sm:items-center sm:justify-between gap-4"
+          >
+
+            <!-- AUTHOR -->
+
+            <div class="flex items-center gap-3">
+
+              <div
+                class="w-10 h-10 rounded-full
+                       bg-red-600 text-white
+                       flex items-center justify-center
+                       font-black shadow-sm"
+              >
+                {{
+                  article.authorName
+                    ? article.authorName.charAt(0).toUpperCase()
+                    : 'स'
+                }}
+              </div>
+
+              <div>
+
+                <div
+                  class="font-bold text-sm text-slate-900"
+                >
+                  {{ article.authorName }}
+                </div>
+
+                <div
+                  class="text-[11px] text-red-600 font-medium"
+                >
+                  {{ article.authorRole || 'संवाददाता' }}
+                  • सत्य संवाद ब्यूरो
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- DATE / VIEWS -->
+
+            <div
+              class="flex flex-wrap items-center
+                     gap-4 text-xs text-slate-500"
+            >
+
+              <span>
+                📅 {{ article.publishedAt | date:'mediumDate' }}
+              </span>
+
+              <span>
+                👁️ {{ article.viewCount }} पाठकों ने पढ़ा
+              </span>
+
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <!-- ===================================================== -->
+        <!-- FEATURED IMAGE -->
+        <!-- ===================================================== -->
+
+        <div
+          class="relative rounded-2xl overflow-hidden
+                 border border-slate-200 shadow-lg mb-7"
+        >
+
+          <img
+            [src]="article.thumbnailUrl"
+            [alt]="article.title"
+            class="w-full h-72 sm:h-96 lg:h-[480px]
+                   object-cover"
+          >
+
+          <!-- Image Overlay -->
+
+          <div
+            class="absolute bottom-0 inset-x-0
+                   bg-gradient-to-t
+                   from-slate-950/90
+                   via-slate-900/50
+                   to-transparent
+                   p-4 pt-12"
+          >
+
+            <div
+              class="text-xs text-white font-medium"
+            >
+              📍 {{ article.districtName }}, झारखण्ड
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- YOUTUBE VIDEO -->
+        <!-- ===================================================== -->
+
+        <div
+          *ngIf="article.youtubeUrl"
+          class="mb-8 bg-slate-950
+                 p-4 sm:p-5 rounded-2xl
+                 border border-slate-800 shadow-xl"
+        >
+
+          <!-- Video Header -->
+
+          <div
+            class="flex items-center gap-2
+                   text-red-500 font-bold text-sm mb-4"
+          >
+
+            <svg
+              class="w-5 h-5 fill-current"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136
+                C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505
+                A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12
+                s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136
+                c1.871.505 9.376.505 9.376.505s7.505-.505
+                9.377-.505a3.015 3.015 0 002.122-2.136
+                C24 15.93 24 12 24 12s0-3.93-.502-5.814z
+                M9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+              />
+            </svg>
+
+            <span>
+              सत्य संवाद विशेष वीडियो रिपोर्ट
+            </span>
+
+          </div>
+
+
+          <!-- Video -->
+
+          <div
+            class="aspect-video w-full
+                   rounded-xl overflow-hidden shadow-lg"
+          >
+
+            <iframe
+              [src]="article.youtubeUrl | safeUrl"
+              class="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write;
+                     encrypted-media; gyroscope;
+                     picture-in-picture"
+              allowfullscreen>
+            </iframe>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- ARTICLE CONTENT -->
+        <!-- ===================================================== -->
+
+        <article
+          class="bg-white
+                 border border-slate-200
+                 rounded-2xl
+                 shadow-md
+                 p-5 sm:p-7 lg:p-8
+                 mb-8
+                 text-slate-800
+                 font-hindi
+                 rich-text-content
+                 prose prose-slate
+                 max-w-none
+                 text-base sm:text-lg
+                 leading-relaxed"
+          [innerHTML]="article.content | safeHtml"
+        >
+        </article>
+
+
+    <!-- ===================================================== -->
+        <!-- SHARE BAR -->
+        <!-- ===================================================== -->
+
+        <div
+          class="bg-slate-50
+                 border border-slate-200
+                 rounded-2xl
+                 p-4 sm:p-5
+                 mb-8"
+        >
+
+          <div
+            class="flex flex-col sm:flex-row
+                   sm:items-center
+                   sm:justify-between
+                   gap-4"
+          >
+
+            <div>
+
+              <h3
+                class="font-bold text-slate-900 text-sm"
+              >
+                खबर शेयर करें
+              </h3>
+
+              <p
+                class="text-xs text-slate-500 mt-1"
+              >
+                इस खबर को अपने दोस्तों और परिवार के साथ शेयर करें।
+              </p>
+
+            </div>
+
+
+            <div>
+
+              <!-- Main Share Button (Opens Social Media Modal) -->
+              <button
+                type="button"
+                (click)="openShareModal()"
+                class="px-5 py-2.5 rounded-full
+                       bg-emerald-600 hover:bg-emerald-700
+                       text-white flex items-center gap-2
+                       justify-center transition shadow-md text-xs sm:text-sm font-bold cursor-pointer"
+                title="सोशल मीडिया पर शेयर करें"
+              >
+                <span>📤</span>
+                <span>शेयर करें</span>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- COMMENTS -->
+        <!-- ===================================================== -->
+
+        <section
+          class="bg-white
+                 p-5 sm:p-7
+                 rounded-2xl
+                 border border-slate-200
+                 shadow-md
+                 mb-10"
+        >
+
+          <!-- Comments Header -->
+
+          <div
+            class="flex items-center
+                   justify-between
+                   border-b border-slate-200
+                   pb-3 mb-6"
+          >
+
+            <h3
+              class="text-xl font-bold
+                     text-slate-900 font-serif"
+            >
+              💬 पाठक प्रतिक्रियाएं
+            </h3>
+
+            <span
+              class="text-xs text-red-600"
+            >
+              कुल: {{ comments.length }}
+            </span>
+
+          </div>
+
+
+          <!-- Existing Comments -->
+
+          <div class="space-y-4 mb-8">
+
+            <!-- No Comments -->
+
+            <div
+              *ngIf="comments.length === 0"
+              class="text-slate-500
+                     text-sm text-center
+                     py-7
+                     bg-slate-50
+                     rounded-xl
+                     border border-slate-200"
+            >
+              इस खबर पर पहली प्रतिक्रिया दें!
+            </div>
+
+
+            <!-- Comments -->
+
+            <div
+              *ngFor="let c of comments"
+              class="bg-slate-50
+                     p-4 rounded-xl
+                     border border-slate-200"
+            >
+
+              <div
+                class="flex items-center
+                       justify-between gap-3 mb-1"
+              >
+
+                <span
+                  class="font-bold
+                         text-red-700 text-sm"
+                >
+                  {{ c.userName }}
+                </span>
+
+                <span
+                  class="text-[10px]
+                         text-slate-500"
+                >
+                  {{ c.createdAt | date:'short' }}
+                </span>
+
+              </div>
+
+              <p
+                class="text-xs sm:text-sm
+                       text-slate-700
+                       leading-relaxed"
+              >
+                {{ c.commentText }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- ================================================= -->
+          <!-- COMMENT FORM -->
+          <!-- ================================================= -->
+
+          <div
+            class="bg-slate-50
+                   p-5 rounded-xl
+                   border border-slate-200
+                   space-y-4"
+          >
+
+            <h4
+              class="text-sm font-bold
+                     text-red-700"
+            >
+              अपनी राय लिखें
+            </h4>
+
+
+            <!-- Name / Email -->
+
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            >
+
+              <input
+                type="text"
+                [(ngModel)]="newCommentName"
+                placeholder="आपका नाम *"
+                class="w-full bg-white
+                       border border-slate-300
+                       rounded-lg px-3 py-2.5
+                       text-sm text-slate-900
+                       placeholder-slate-400
+                       focus:outline-none
+                       focus:border-red-600
+                       focus:ring-2
+                       focus:ring-red-100"
+              >
+
+              <input
+                type="email"
+                [(ngModel)]="newCommentEmail"
+                placeholder="ईमेल (वैकल्पिक)"
+                class="w-full bg-white
+                       border border-slate-300
+                       rounded-lg px-3 py-2.5
+                       text-sm text-slate-900
+                       placeholder-slate-400
+                       focus:outline-none
+                       focus:border-red-600
+                       focus:ring-2
+                       focus:ring-red-100"
+              >
+
+            </div>
+
+
+            <!-- Comment -->
+
+            <textarea
+              rows="4"
+              [(ngModel)]="newCommentText"
+              placeholder="आपकी प्रतिक्रिया *"
+              class="w-full bg-white
+                     border border-slate-300
+                     rounded-lg px-3 py-2.5
+                     text-sm text-slate-900
+                     placeholder-slate-400
+                     focus:outline-none
+                     focus:border-red-600
+                     focus:ring-2
+                     focus:ring-red-100"
+            ></textarea>
+
+
+            <!-- Submit -->
+
+            <button
+              type="button"
+              (click)="submitComment()"
+              class="bg-red-600
+                     hover:bg-red-700
+                     text-white
+                     font-bold
+                     px-6 py-2.5
+                     rounded-lg
+                     text-sm
+                     transition
+                     shadow"
+            >
+              कमेंट सबमिट करें
+            </button>
+
+
+            <!-- Success -->
+
+            <div
+              *ngIf="commentSuccess"
+              class="bg-emerald-50
+                     text-emerald-700
+                     border border-emerald-200
+                     text-xs p-3 rounded-lg"
+            >
+              ✓ आपकी प्रतिक्रिया प्रकाशित कर दी गई है!
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- ======================================================= -->
+      <!-- RIGHT : TRENDING NEWS -->
+      <!-- ======================================================= -->
+
+      <aside
+        class="lg:col-span-4
+               lg:sticky lg:top-24
+               space-y-6"
+      >
+
+        <!-- ===================================================== -->
+        <!-- TRENDING NEWS -->
+        <!-- ===================================================== -->
+
+        <div
+          class="bg-white
+                 rounded-2xl
+                 border border-slate-200
+                 shadow-md
+                 overflow-hidden"
+        >
+
+          <!-- Header -->
+
+          <div
+            class="bg-gradient-to-r
+                   from-red-700
+                   via-red-600
+                   to-amber-500
+                   px-5 py-4"
+          >
+
+            <div
+              class="flex items-center
+                     justify-between"
+            >
+
+              <div
+                class="flex items-center gap-2"
+              >
+
+                <span
+                  class="text-xl"
+                >
+                  🔥
+                </span>
+
+                <div>
+
+                  <h2
+                    class="text-base
+                           font-black
+                           text-white"
+                  >
+                    ट्रेंडिंग न्यूज़
+                  </h2>
+
+                  <p
+                    class="text-[10px]
+                           text-red-100"
+                  >
+                    सर्वाधिक पढ़ी गई खबरें
+                  </p>
+
+                </div>
+
+              </div>
+
+              <span
+                class="text-[10px]
+                       bg-white/20
+                       text-white
+                       px-2 py-1
+                       rounded-full"
+              >
+                TRENDING
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- Trending List -->
+
+          <div
+            class="p-5 space-y-4"
+          >
+
+            <div
+              *ngFor="
+                let item of trendingArticles;
+                let i = index
+              "
+              (click)="openArticle(item.id)"
+              class="flex items-start gap-3
+                     cursor-pointer
+                     group
+                     border-b border-slate-100
+                     pb-4
+                     last:border-0
+                     last:pb-0"
+            >
+
+              <!-- Ranking Number -->
+
+              <div
+                class="w-8 h-8
+                       rounded-lg
+                       bg-red-50
+                       text-red-700
+                       border border-red-100
+                       flex-shrink-0
+                       flex items-center
+                       justify-center
+                       font-black
+                       text-xs
+                       group-hover:bg-red-600
+                       group-hover:text-white
+                       transition"
+              >
+                {{ (i + 1) | number:'2.0-0' }}
+              </div>
+
+
+              <!-- Content -->
+
+              <div
+                class="min-w-0 flex-1"
+              >
+
+                <!-- District -->
+
+                <div
+                  class="flex items-center
+                         gap-2 mb-1"
+                >
+
+                  <span
+                    class="text-[10px]
+                           text-red-600
+                           font-bold"
+                  >
+                    📍 {{ item.districtName }}
+                  </span>
+
+                </div>
+
+
+                <!-- Title -->
+
+                <h3
+                  class="text-sm
+                         font-bold
+                         text-slate-800
+                         leading-snug
+                         line-clamp-3
+                         group-hover:text-red-600
+                         transition"
+                >
+                  {{ item.title }}
+                </h3>
+
+
+                <!-- Views -->
+
+                <div
+                  class="flex items-center
+                         gap-2
+                         mt-2
+                         text-[10px]
+                         text-slate-500"
+                >
+
+                  <span>
+                    👁️ {{ item.viewCount }}
+                  </span>
+
+                  <span>
+                    पाठकों ने पढ़ा
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- Empty Trending -->
+
+            <div
+              *ngIf="
+                !trendingArticles ||
+                trendingArticles.length === 0
+              "
+              class="text-center
+                     py-6
+                     text-xs
+                     text-slate-500"
+            >
+              अभी ट्रेंडिंग खबरें उपलब्ध नहीं हैं।
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- CATEGORY INFORMATION -->
+        <!-- ===================================================== -->
+
+        <div
+          class="bg-slate-50
+                 border border-slate-200
+                 rounded-2xl
+                 p-5"
+        >
+
+          <div
+            class="flex items-center gap-3 mb-3"
+          >
+
+            <div
+              class="w-10 h-10
+                     rounded-xl
+                     bg-red-100
+                     text-red-600
+                     flex items-center
+                     justify-center"
+            >
+              📰
+            </div>
+
+            <div>
+
+              <h3
+                class="text-sm
+                       font-black
+                       text-slate-900"
+              >
+                सत्य संवाद
+              </h3>
+
+              <p
+                class="text-[10px]
+                       text-red-600"
+              >
+                निष्पक्ष खबर, आपके साथ
+              </p>
+
+            </div>
+
+          </div>
+
+          <p
+            class="text-xs
+                   text-slate-600
+                   leading-relaxed"
+          >
+            झारखण्ड की ताजा खबरें,
+            जिला समाचार, राजनीति, शिक्षा,
+            रोजगार, उद्योग और अन्य महत्वपूर्ण
+            समाचारों से अपडेट रहें।
+          </p>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- DISTRICT -->
+        <!-- ===================================================== -->
+
+        <div
+          class="bg-white
+                 border border-slate-200
+                 rounded-2xl
+                 p-5 shadow-md"
+        >
+
+          <div
+            class="flex items-center
+                   justify-between
+                   mb-4"
+          >
+
+            <h3
+              class="text-sm
+                     font-black
+                     text-slate-900"
+            >
+              📍 जिला समाचार
+            </h3>
+
+            <span
+              class="text-[10px]
+                     text-red-600
+                     font-bold"
+            >
+              {{ article.districtName }}
+            </span>
+
+          </div>
+
+
+          <button
+            type="button"
+            [routerLink]="['/feed']"
+            [queryParams]="{
+              district: article.districtId
+            }"
+            class="w-full
+                   bg-red-600
+                   hover:bg-red-700
+                   text-white
+                   font-bold
+                   text-xs
+                   py-2.5
+                   rounded-lg
+                   transition
+                   shadow"
+          >
+            {{ article.districtName }} की सभी खबरें →
+          </button>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- ARTICLE NOT FOUND -->
+  <!-- ========================================================= -->
+
+  <div
+    *ngIf="!article"
+    class="max-w-3xl
+           mx-auto
+           px-4
+           py-20
+           text-center"
+  >
+
+    <div
+      class="text-6xl mb-5"
+    >
+      📰
+    </div>
+
+    <h2
+      class="text-2xl
+             font-black
+             text-slate-900
+             mb-2"
+    >
+      खबर उपलब्ध नहीं है
+    </h2>
+
+    <p
+      class="text-sm
+             text-slate-500
+             mb-6"
+    >
+      यह खबर हटाई जा चुकी है या उपलब्ध नहीं है।
+    </p>
+
+    <a
+      routerLink="/home"
+      class="inline-flex
+             items-center
+             bg-red-600
+             hover:bg-red-700
+             text-white
+             font-bold
+             px-6 py-2.5
+             rounded-lg
+             text-sm
+             transition"
+    >
+      ← मुख्य पृष्ठ पर जाएं
+    </a>
+
+  </div>
+
+</main>
+
+<!-- ========================================================= -->
+<!-- ARTICLE SOCIAL MEDIA SHARE MODAL / POPUP -->
+<!-- ========================================================= -->
+<div
+  *ngIf="isShareModalOpen && article"
+  class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+  style="animation: fadeIn 0.2s ease-in-out;"
+  (click)="closeShareModal()"
+>
+  <div
+    class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 relative border border-slate-200 transform transition-all"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Close Button -->
+    <button
+      type="button"
+      (click)="closeShareModal()"
+      class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold transition cursor-pointer"
+      title="बंद करें"
+    >
+      ✕
+    </button>
+
+    <!-- Modal Header -->
+    <div class="text-center pb-4 border-b border-slate-100">
+      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-2 shadow-inner">
+        📤
+      </div>
+      <h3 class="text-lg font-black text-slate-900 font-serif">
+        समाचार शेयर करें
+      </h3>
+      <p class="text-xs text-slate-500 font-medium mt-1 truncate px-4">
+        {{ article.title }}
+      </p>
+    </div>
+
+    <!-- Social Media Grid -->
+    <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 py-5">
+      
+      <!-- WhatsApp -->
+      <button
+        type="button"
+        (click)="shareTo('whatsapp')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-green-50 transition group cursor-pointer border border-transparent hover:border-green-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-green-500 group-hover:scale-110 text-white flex items-center justify-center text-2xl shadow-md transition-transform">
+          💬
+        </div>
+        <span class="text-xs font-bold text-slate-800">WhatsApp</span>
+      </button>
+
+      <!-- Facebook -->
+      <button
+        type="button"
+        (click)="shareTo('facebook')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-blue-50 transition group cursor-pointer border border-transparent hover:border-blue-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-blue-600 group-hover:scale-110 text-white flex items-center justify-center text-2xl font-black shadow-md transition-transform">
+          f
+        </div>
+        <span class="text-xs font-bold text-slate-800">Facebook</span>
+      </button>
+
+      <!-- X (Twitter) -->
+      <button
+        type="button"
+        (click)="shareTo('twitter')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-slate-100 transition group cursor-pointer border border-transparent hover:border-slate-300"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-slate-900 group-hover:scale-110 text-white flex items-center justify-center text-lg font-bold shadow-md transition-transform">
+          𝕏
+        </div>
+        <span class="text-xs font-bold text-slate-800">X (Twitter)</span>
+      </button>
+
+      <!-- Telegram -->
+      <button
+        type="button"
+        (click)="shareTo('telegram')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-sky-50 transition group cursor-pointer border border-transparent hover:border-sky-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-sky-500 group-hover:scale-110 text-white flex items-center justify-center text-xl shadow-md transition-transform">
+          ✈️
+        </div>
+        <span class="text-xs font-bold text-slate-800">Telegram</span>
+      </button>
+
+      <!-- LinkedIn -->
+      <button
+        type="button"
+        (click)="shareTo('linkedin')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-blue-50 transition group cursor-pointer border border-transparent hover:border-blue-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-blue-700 group-hover:scale-110 text-white flex items-center justify-center text-lg font-bold shadow-md transition-transform">
+          in
+        </div>
+        <span class="text-xs font-bold text-slate-800">LinkedIn</span>
+      </button>
+
+      <!-- Native Share / All Apps -->
+      <button
+        *ngIf="hasNativeShare()"
+        type="button"
+        (click)="shareTo('native')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-purple-50 transition group cursor-pointer border border-transparent hover:border-purple-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-purple-600 group-hover:scale-110 text-white flex items-center justify-center text-xl shadow-md transition-transform">
+          📲
+        </div>
+        <span class="text-xs font-bold text-slate-800">More Apps</span>
+      </button>
+
+    </div>
+
+    <!-- Copy Direct Link Box -->
+    <div class="pt-3 border-t border-slate-100">
+      <label class="block text-[11px] font-bold text-slate-600 mb-1.5">
+        डायरेक्ट आर्टिकल लिंक कॉपी करें:
+      </label>
+      <div class="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-1.5">
+        <input
+          type="text"
+          readonly
+          [value]="getShareUrl()"
+          class="text-xs text-slate-700 bg-transparent flex-1 px-2 border-0 outline-none truncate"
+        />
+        <button
+          type="button"
+          (click)="copyShareModalLink()"
+          [class.bg-emerald-600]="isModalLinkCopied"
+          [class.bg-red-600]="!isModalLinkCopied"
+          class="px-3.5 py-1.5 rounded-lg text-white text-xs font-bold transition shadow-sm cursor-pointer whitespace-nowrap"
+        >
+          {{ isModalLinkCopied ? '✓ Copied!' : 'कॉपी करें' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,1085 @@
+<app-header></app-header>
+
+<main class="bg-white text-slate-900 min-h-screen pb-16 font-sans">
+
+  <!-- Hero Section -->
+  <section class="max-w-7xl mx-auto px-4 pt-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Big Featured Story Card -->
+     <!-- ========================================================= -->
+<!-- BIG FEATURED STORY SLIDER -->
+<!-- ========================================================= -->
+
+<!-- Hero Skeleton Loader when isLoading -->
+<div *ngIf="isLoading" class="lg:col-span-2 relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-xl animate-pulse h-[380px] sm:h-[450px] lg:h-[480px] flex flex-col justify-end space-y-4">
+  <div class="h-6 bg-slate-300 rounded w-1/4"></div>
+  <div class="h-8 bg-slate-300 rounded w-3/4"></div>
+  <div class="h-4 bg-slate-300 rounded w-1/2"></div>
+</div>
+
+<div
+  *ngIf="!isLoading && featuredArticle"
+  class="lg:col-span-2 relative overflow-hidden rounded-2xl
+         border border-slate-200 bg-white shadow-xl
+         group"
+  (mouseenter)="pauseHeroSlider()"
+  (mouseleave)="resumeHeroSlider()"
+>
+
+  <!-- ======================================================= -->
+  <!-- SLIDER IMAGE -->
+  <!-- ======================================================= -->
+
+  <div
+    class="relative h-[380px] sm:h-[400px] lg:h-[420px] w-full overflow-hidden bg-slate-900 rounded-2xl"
+  >
+
+    <!-- IMAGE -->
+
+    <img
+      [src]="featuredArticle.thumbnailUrl"
+      [alt]="featuredArticle.title"
+      fetchpriority="high"
+      decoding="async"
+      class="absolute inset-0
+             w-full h-full
+             object-cover object-center
+             transition-all duration-700 ease-in-out group-hover:scale-105"
+    >
+
+
+    <!-- DARK GRADIENT -->
+
+    <div
+      class="absolute inset-0
+             bg-gradient-to-t
+             from-slate-950
+             via-slate-950/65
+             to-transparent">
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- TOP BADGES -->
+    <!-- ===================================================== -->
+
+    <div
+      class="absolute top-4 left-4 right-4
+             flex flex-wrap
+             items-center
+             gap-2
+             z-10"
+    >
+
+      <!-- CATEGORY -->
+
+      <span
+        *ngIf="featuredArticle.categoryName"
+        class="rounded-full
+               bg-red-600
+               px-3 py-1
+               text-xs
+               font-bold
+               uppercase
+               tracking-wide
+               text-white
+               shadow-lg"
+      >
+
+        {{ featuredArticle.categoryName }}
+
+      </span>
+
+
+      <!-- DISTRICT -->
+
+      <span
+        *ngIf="featuredArticle.districtName"
+        class="rounded-full
+               bg-amber-400
+               px-3 py-1
+               text-xs
+               font-bold
+               text-slate-950
+               shadow-lg"
+      >
+
+        📍 {{ featuredArticle.districtName }}
+
+      </span>
+
+
+      <!-- BREAKING -->
+
+      <span
+        *ngIf="featuredArticle.isBreaking"
+        class="animate-pulse
+               rounded-full
+               bg-red-500
+               px-3 py-1
+               text-xs
+               font-extrabold
+               text-white
+               shadow-lg"
+      >
+
+        ⚡ ब्रेकिंग
+
+      </span>
+
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- SLIDER NUMBER -->
+    <!-- ===================================================== -->
+
+    <div
+      *ngIf="heroSliderArticles.length > 1"
+      class="absolute
+             top-4 right-4
+             z-10
+             rounded-full
+             bg-black/50
+             px-3 py-1
+             text-xs
+             font-semibold
+             text-white
+             backdrop-blur-sm"
+    >
+      
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ARTICLE CONTENT -->
+    <!-- ===================================================== -->
+
+    <div
+      class="absolute
+             bottom-0
+             left-0
+             right-0
+             z-10
+             p-4
+             sm:p-6
+             lg:p-7"
+    >
+
+      <!-- TITLE -->
+
+      <h2
+        class="mb-2
+               cursor-pointer
+               font-serif
+               text-m
+               font-black
+               leading-tight
+               text-white
+               transition
+               duration-300
+               hover:text-amber-300
+               sm:text-2xl
+               lg:text-3xl"
+        (click)="openArticle(featuredArticle.id)"
+      >
+
+        {{ featuredArticle.title }}
+
+      </h2>
+
+
+      <!-- SUMMARY -->
+
+      <p
+        *ngIf="featuredArticle.summary"
+        class="mb-3
+               max-w-3xl
+               line-clamp-2
+               text-xs
+               leading-relaxed
+               text-slate-200
+               sm:text-sm"
+      >
+
+        {{ featuredArticle.summary }}
+
+      </p>
+
+
+      <!-- META -->
+
+      <div
+        class="flex
+               flex-wrap
+               items-center
+               gap-x-4
+               gap-y-2
+               text-xs
+               font-medium
+               text-amber-300"
+      >
+
+        <!-- AUTHOR -->
+
+        <span
+          *ngIf="featuredArticle.authorName"
+          class="flex items-center gap-1"
+        >
+
+          <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0z"
+            ></path>
+
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
+
+          </svg>
+
+          {{ featuredArticle.authorName }}
+
+        </span>
+
+
+        <span *ngIf="featuredArticle.authorName">•</span>
+
+
+        <!-- DATE -->
+
+        <span
+          *ngIf="featuredArticle.publishedAt"
+          class="flex items-center gap-1 text-slate-200"
+        >
+
+          <svg
+            class="h-3.5 w-3.5 text-amber-300"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            ></path>
+          </svg>
+
+          {{ featuredArticle.publishedAt | date:'dd MMM yyyy' }}
+
+        </span>
+
+
+        <span>•</span>
+
+
+        <!-- VIEWS -->
+        <span>
+          👁️
+          {{ featuredArticle.viewCount || 0 }}
+          पाठकों ने पढ़ा
+        </span>
+
+        <span>•</span>
+
+        <!-- SHARE BUTTON -->
+        <button
+          type="button"
+          (click)="$event.stopPropagation(); openShareModal(featuredArticle)"
+          class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/20 hover:bg-red-600 text-white font-bold text-xs backdrop-blur transition shadow cursor-pointer border border-white/30"
+          title="सोशल मीडिया पर शेयर करें"
+        >
+          <span>📤</span>
+          <span>शेयर</span>
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- PREVIOUS BUTTON -->
+    <!-- ===================================================== -->
+
+  
+
+
+    <!-- ===================================================== -->
+    <!-- SLIDER DOTS -->
+    <!-- ===================================================== -->
+
+    <div
+      *ngIf="heroSliderArticles.length > 1"
+      class="absolute
+             bottom-4
+             right-4
+             z-20
+             flex
+             items-center
+             gap-1.5
+             rounded-full
+             bg-black/35
+             px-3
+             py-2
+             backdrop-blur-sm
+             sm:bottom-5
+             sm:right-6"
+    >
+
+      <button
+        *ngFor="
+          let article of heroSliderArticles;
+          let i = index;
+          trackBy: trackByArticle
+        "
+        type="button"
+        [attr.aria-label]="'खबर ' + (i + 1)"
+        (click)="selectHeroSlide(i, $event)"
+        class="h-2
+               rounded-full
+               transition-all
+               duration-300"
+        [ngClass]="
+          i === currentHeroIndex
+            ? 'w-6 bg-red-500'
+            : 'w-2 bg-white/60 hover:bg-white'
+        "
+      >
+      </button>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- CLICK OVERLAY -->
+    <!-- ===================================================== -->
+
+    <button
+      type="button"
+      aria-label="खबर पढ़ें"
+      (click)="openArticle(featuredArticle.id)"
+      class="absolute inset-0 z-[5] cursor-pointer"
+    >
+    </button>
+
+  </div>
+
+</div>
+
+
+      <!-- Hero Sidebar -->
+      <div class="space-y-4 flex flex-col justify-between">
+
+        <div
+          class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-md"
+        >
+
+          <h2
+            class="text-sm font-bold text-red-700 uppercase tracking-wider border-b border-slate-200 pb-2 mb-3 flex items-center justify-between"
+          >
+            <span>
+              प्रमुख राज्य समाचार
+            </span>
+
+            <span class="text-xs text-red-600 font-normal">
+              झारखण्ड एक्सप्रेस
+            </span>
+          </h2>
+
+
+          <div class="space-y-4">
+
+            <div
+              *ngFor="let item of heroSubArticles; trackBy: trackByArticleId"
+              (click)="openArticle(item.id)"
+              class="flex space-x-3 group cursor-pointer border-b border-slate-100 pb-3 last:border-0 last:pb-0"
+            >
+
+              <img
+                [src]="item.thumbnailUrl"
+                [alt]="item.title"
+                loading="lazy"
+                decoding="async"
+                class="w-20 h-16 object-cover rounded-lg flex-shrink-0 group-hover:opacity-90"
+              >
+
+              <div class="space-y-1">
+
+                <div class="flex items-center space-x-2">
+
+                  <span
+                    class="text-[10px] bg-red-100 text-red-800 border border-red-200 px-1.5 py-0.5 rounded font-bold"
+                  >
+                    📍 {{ item.districtName }}
+                  </span>
+
+                </div>
+
+                <h3
+                  class="text-xs font-bold text-slate-800 group-hover:text-red-600 transition line-clamp-2"
+                >
+                  {{ item.title }}
+                </h3>
+
+                <div class="flex items-center space-x-2 text-[10px] text-slate-500">
+                  <span *ngIf="item.publishedAt">📅 {{ item.publishedAt | date:'dd MMM yyyy' }}</span>
+                  <span *ngIf="item.publishedAt">•</span>
+                  <span>👁️ {{ item.viewCount }} views</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Jharkhand District Quick Filter -->
+  <section class="max-w-7xl mx-auto px-4 py-8">
+
+    <div
+      class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-md"
+    >
+
+      <div
+        class="flex flex-wrap items-center justify-between mb-3 gap-2"
+      >
+
+        <div class="flex items-center space-x-2">
+
+          <span class="text-red-600 text-lg">
+            📌
+          </span>
+
+          <h3
+            class="text-sm font-bold text-slate-900 uppercase tracking-wider"
+          >
+            झारखण्ड जिलावार समाचार (Choose District News)
+          </h3>
+
+        </div>
+
+        <span class="text-xs text-slate-500 font-hindi">
+          कुल 24 जिले उपलब्ध
+        </span>
+
+      </div>
+
+
+      <div
+        class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-thin"
+      >
+
+        <!-- All Districts -->
+        <button
+          (click)="filterByDistrict('all')"
+          [class]="
+            selectedDistrictId === 'all'
+              ? 'bg-red-600 text-white font-bold shadow'
+              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          "
+          class="px-4 py-1.5 rounded-full text-xs font-medium transition flex-shrink-0"
+        >
+          सभी 24 जिले (All Jharkhand)
+        </button>
+
+
+        <!-- Districts -->
+        <button
+          *ngFor="let dist of districts"
+          (click)="filterByDistrict(dist.id)"
+          [class]="
+            selectedDistrictId === dist.id
+              ? 'bg-red-600 text-white font-bold ring-2 ring-red-400 shadow'
+              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          "
+          class="px-3.5 py-1.5 rounded-full text-xs font-medium transition flex-shrink-0 border border-slate-200"
+        >
+
+          <span>
+            {{ dist.name }}
+          </span>
+
+          <span
+            class="text-[10px] text-red-600 ml-1 font-hindi"
+          >
+            ({{ dist.hindiName }})
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- Main Feed -->
+  <section class="max-w-7xl mx-auto px-4">
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Primary News Column -->
+      <div class="lg:col-span-2 space-y-10">
+
+
+        <!-- Latest News -->
+        <div>
+
+          <div
+            class="flex items-center justify-between border-b-2 border-red-600 pb-2 mb-6"
+          >
+
+            <h2
+              class="text-xl font-black text-slate-900 font-serif tracking-tight flex items-center space-x-2"
+            >
+
+              <span
+                class="w-3 h-6 bg-red-600 rounded-sm"
+              ></span>
+
+              <span>
+                ताजा समाचार स्ट्रीम (Latest News Stream)
+              </span>
+
+            </h2>
+
+            <span
+              class="text-xs text-red-600 font-bold uppercase tracking-wider"
+            >
+              {{
+                selectedDistrictId === 'all'
+                  ? 'समग्र झारखण्ड'
+                  : 'जिला: ' + selectedDistrictId
+              }}
+            </span>
+
+          </div>
+
+
+          <!-- News Cards Skeleton Loader -->
+          <div *ngIf="isLoading" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div *ngFor="let item of [1, 2, 3, 4]" class="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 shadow-md animate-pulse">
+              <div class="h-48 bg-slate-200 rounded-xl w-full"></div>
+              <div class="h-4 bg-slate-200 rounded w-1/4"></div>
+              <div class="h-5 bg-slate-200 rounded w-full"></div>
+              <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+              <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+            </div>
+          </div>
+
+          <!-- News Cards Actual List -->
+          <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div
+              *ngFor="let article of allPublishedArticles; trackBy: trackByArticleId"
+              (click)="openArticle(article.id)"
+              class="bg-white rounded-2xl border border-slate-200 hover:border-red-500 shadow-md hover:shadow-xl overflow-hidden group cursor-pointer flex flex-col justify-between transition-all duration-300 hover:-translate-y-1"
+            >
+
+              <div>
+
+                <!-- Thumbnail -->
+                <div class="relative h-48 w-full overflow-hidden">
+
+                  <img
+                    [src]="article.thumbnailUrl"
+                    [alt]="article.title"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  >
+
+                  <!-- District -->
+                  <span
+                    class="absolute top-2 left-2 bg-red-600 text-white font-bold text-[10px] px-2.5 py-0.5 rounded shadow uppercase"
+                  >
+                    📍 {{ article.districtName }}
+                  </span>
+
+                  <!-- Category -->
+                  <span
+                    class="absolute top-2 right-2 bg-slate-900/80 text-white font-medium text-[10px] px-2 py-0.5 rounded backdrop-blur"
+                  >
+                    {{ article.categoryName }}
+                  </span>
+
+                </div>
+
+
+                <!-- Content -->
+                <div class="p-4 space-y-2">
+
+                  <h3
+                    class="text-base font-bold text-slate-900 group-hover:text-red-600 transition leading-snug line-clamp-2 font-serif"
+                  >
+                    {{ article.title }}
+                  </h3>
+
+                  <p
+                    class="text-xs text-slate-600 line-clamp-2 leading-relaxed"
+                  >
+                    {{ article.summary }}
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <!-- Footer -->
+              <div
+                class="p-4 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500"
+              >
+                <div class="flex items-center gap-2">
+                  <span>✍️ {{ article.authorName }}</span>
+                  <span>•</span>
+                  <span>👁️ {{ article.viewCount }}</span>
+                </div>
+
+                <button
+                  type="button"
+                  (click)="$event.stopPropagation(); openShareModal(article)"
+                  class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center gap-1 transition shadow-sm border border-emerald-200 cursor-pointer"
+                  title="सोशल मीडिया पर शेयर करें"
+                >
+                  <span>📤</span>
+                  <span>शेयर</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- View More News Button (Always Visible at Bottom) -->
+          <div *ngIf="!isLoading" class="mt-8 text-center">
+            <button
+              type="button"
+              (click)="loadMoreArticles()"
+              class="inline-flex items-center space-x-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold text-sm px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
+            >
+              <span>और खबरें देखें (View More News)</span>
+              <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+
+        </div>
+
+
+        <!-- Industry & Mining -->
+        <div
+          class="bg-white p-6 rounded-2xl border border-slate-200 shadow-md"
+        >
+
+          <div
+            class="flex items-center justify-between border-b border-slate-200 pb-3 mb-6"
+          >
+
+            <div class="flex items-center space-x-2">
+
+              <span class="text-2xl">
+                🏭
+              </span>
+
+              <div>
+
+                <h3
+                  class="text-lg font-bold text-slate-900 font-serif"
+                >
+                  उद्योग एवं खनन (Mining & Industry)
+                </h3>
+
+                <p
+                  class="text-xs text-red-600"
+                >
+                  Dhanbad Coal Belt • Jamshedpur Tata Steel • Bokaro Steel City
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <div
+              *ngFor="let item of getArticlesByCategory('mining-industry')"
+              (click)="openArticle(item.id)"
+              class="bg-white p-4 rounded-xl border border-slate-200 hover:border-red-500 hover:shadow-md cursor-pointer space-y-2 transition"
+            >
+
+              <span
+                class="inline-block text-[10px] bg-red-100 text-red-800 px-2 py-0.5 rounded font-bold"
+              >
+                📍 {{ item.districtName }}
+              </span>
+
+              <h4
+                class="text-sm font-bold text-slate-900 hover:text-red-600 line-clamp-2"
+              >
+                {{ item.title }}
+              </h4>
+
+              <p
+                class="text-xs text-slate-600 line-clamp-2"
+              >
+                {{ item.summary }}
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- YouTube Video News Section -->
+        <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xl" *ngIf="videoArticles.length > 0">
+          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-6">
+            <div class="flex items-center space-x-3">
+              <span class="bg-red-600 p-2 rounded-xl text-white">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </span>
+              <div>
+                <h3 class="text-lg font-black font-serif text-white">सत्य संवाद वीडियो न्यूज़ (YouTube Video News)</h3>
+                <p class="text-xs text-red-400 font-medium">ग्राउंड रिपोर्टिंग और विशेष वीडियो बुलेटिन</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div *ngFor="let vid of videoArticles; trackBy: trackByArticleId" class="bg-slate-800 rounded-xl overflow-hidden shadow border border-slate-700">
+              <div class="aspect-video w-full relative bg-black">
+                <ng-container *ngIf="activeVideoId === vid.id; else videoPoster">
+                  <iframe 
+                    [src]="vid.safeYoutubeUrl" 
+                    class="w-full h-full border-0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                  </iframe>
+                </ng-container>
+                <ng-template #videoPoster>
+                  <div (click)="playVideo(vid.id)" class="relative w-full h-full cursor-pointer group flex items-center justify-center overflow-hidden">
+                    <img 
+                      [src]="vid.thumbnailUrl || 'assets/img/no-image.avif'" 
+                      [alt]="vid.title" 
+                      loading="lazy"
+                      decoding="async"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    >
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <div class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+              <div class="p-4 space-y-2">
+                <span class="text-[10px] bg-red-600 text-white font-bold px-2 py-0.5 rounded">📍 {{ vid.districtName }}</span>
+                <h4 class="text-sm font-bold text-white line-clamp-2 hover:text-amber-400 cursor-pointer" (click)="openArticle(vid.id)">{{ vid.title }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+
+
+        <!-- Trending Stories -->
+        <div
+          class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md"
+        >
+
+          <h3
+            class="text-base font-bold text-slate-900 font-serif border-b border-slate-200 pb-3 mb-4 flex items-center space-x-2"
+          >
+
+            <span class="text-red-600 text-lg">
+              🔥
+            </span>
+
+            <span>
+              सर्वाधिक पढ़ी गई खबरें (Trending)
+            </span>
+
+          </h3>
+
+
+          <div class="space-y-4">
+
+            <div
+              *ngFor="let item of trendingArticles; let i = index"
+              (click)="openArticle(item.id)"
+              class="flex items-start space-x-3 cursor-pointer group border-b border-slate-100 pb-3 last:border-0 last:pb-0"
+            >
+
+              <!-- Number -->
+              <span
+                class="w-7 h-7 rounded-lg bg-red-100 text-red-700 border border-red-200 flex items-center justify-center font-black text-xs flex-shrink-0"
+              >
+                0{{ i + 1 }}
+              </span>
+
+
+              <div class="space-y-1">
+
+                <span
+                  class="text-[10px] text-red-600 font-semibold uppercase"
+                >
+                  📍 {{ item.districtName }}
+                </span>
+
+                <h4
+                  class="text-xs font-bold text-slate-800 group-hover:text-red-600 transition line-clamp-2"
+                >
+                  {{ item.title }}
+                </h4>
+
+                <div class="text-[10px] text-slate-500">
+                  👁️ {{ item.viewCount }} पाठकों ने पढ़ा
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Government Jobs & Education -->
+        <div
+          class="bg-white p-5 rounded-2xl border border-red-200 shadow-md space-y-3"
+        >
+
+          <div class="flex items-center space-x-2">
+
+            <span class="text-2xl">
+              🎓
+            </span>
+
+            <div>
+
+              <h3
+                class="text-sm font-bold text-red-900 font-serif"
+              >
+                झारखण्ड जॉब्स एवं शिक्षा अलर्ट
+              </h3>
+
+              <p
+                class="text-[11px] text-red-700 font-medium"
+              >
+                JSSC, JPSC & University Updates
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <p
+            class="text-xs text-slate-700 leading-relaxed"
+          >
+            झारखण्ड लोक सेवा आयोग (JPSC) एवं कर्मचारी चयन आयोग (JSSC) की नवीनतम भर्तियों की पल-पल की जानकारी।
+          </p>
+
+
+          <button
+            (click)="filterByDistrict('ranchi')"
+            class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded text-xs transition shadow"
+          >
+            सरकारी नौकरियां देखें →
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- DAY-WISE NEWSLETTER / E-PAPER SECTION (PREVIOUS 10 DAYS) -->
+  <!-- ========================================================= -->
+  <div class="mt-6 sm:mt-8">
+    <app-newsletter></app-newsletter>
+  </div>
+
+</main>
+
+<!-- ========================================================= -->
+<!-- HOME SOCIAL MEDIA SHARE MODAL / POPUP -->
+<!-- ========================================================= -->
+<div
+  *ngIf="isShareModalOpen && selectedArticleForShare"
+  class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+  style="animation: fadeIn 0.2s ease-in-out;"
+  (click)="closeShareModal()"
+>
+  <div
+    class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 relative border border-slate-200 transform transition-all"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Close Button -->
+    <button
+      type="button"
+      (click)="closeShareModal()"
+      class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold transition cursor-pointer"
+      title="बंद करें"
+    >
+      ✕
+    </button>
+
+    <!-- Modal Header -->
+    <div class="text-center pb-4 border-b border-slate-100">
+      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-2 shadow-inner">
+        📤
+      </div>
+      <h3 class="text-lg font-black text-slate-900 font-serif">
+        समाचार शेयर करें
+      </h3>
+      <p class="text-xs text-slate-500 font-medium mt-1 truncate px-4">
+        {{ selectedArticleForShare.title }}
+      </p>
+    </div>
+
+    <!-- Social Media Grid -->
+    <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 py-5">
+      
+      <!-- WhatsApp -->
+      <button
+        type="button"
+        (click)="shareTo('whatsapp')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-green-50 transition group cursor-pointer border border-transparent hover:border-green-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-green-500 group-hover:scale-110 text-white flex items-center justify-center text-2xl shadow-md transition-transform">
+          💬
+        </div>
+        <span class="text-xs font-bold text-slate-800">WhatsApp</span>
+      </button>
+
+      <!-- Facebook -->
+      <button
+        type="button"
+        (click)="shareTo('facebook')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-blue-50 transition group cursor-pointer border border-transparent hover:border-blue-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-blue-600 group-hover:scale-110 text-white flex items-center justify-center text-2xl font-black shadow-md transition-transform">
+          f
+        </div>
+        <span class="text-xs font-bold text-slate-800">Facebook</span>
+      </button>
+
+      <!-- X (Twitter) -->
+      <button
+        type="button"
+        (click)="shareTo('twitter')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-slate-100 transition group cursor-pointer border border-transparent hover:border-slate-300"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-slate-900 group-hover:scale-110 text-white flex items-center justify-center text-lg font-bold shadow-md transition-transform">
+          𝕏
+        </div>
+        <span class="text-xs font-bold text-slate-800">X (Twitter)</span>
+      </button>
+
+      <!-- Telegram -->
+      <button
+        type="button"
+        (click)="shareTo('telegram')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-sky-50 transition group cursor-pointer border border-transparent hover:border-sky-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-sky-500 group-hover:scale-110 text-white flex items-center justify-center text-xl shadow-md transition-transform">
+          ✈️
+        </div>
+        <span class="text-xs font-bold text-slate-800">Telegram</span>
+      </button>
+
+      <!-- LinkedIn -->
+      <button
+        type="button"
+        (click)="shareTo('linkedin')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-blue-50 transition group cursor-pointer border border-transparent hover:border-blue-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-blue-700 group-hover:scale-110 text-white flex items-center justify-center text-lg font-bold shadow-md transition-transform">
+          in
+        </div>
+        <span class="text-xs font-bold text-slate-800">LinkedIn</span>
+      </button>
+
+      <!-- Native Share / All Apps -->
+      <button
+        *ngIf="hasNativeShare()"
+        type="button"
+        (click)="shareTo('native')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-purple-50 transition group cursor-pointer border border-transparent hover:border-purple-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-purple-600 group-hover:scale-110 text-white flex items-center justify-center text-xl shadow-md transition-transform">
+          📲
+        </div>
+        <span class="text-xs font-bold text-slate-800">More Apps</span>
+      </button>
+
+    </div>
+
+    <!-- Copy Direct Link Box -->
+    <div class="pt-3 border-t border-slate-100">
+      <label class="block text-[11px] font-bold text-slate-600 mb-1.5">
+        डायरेक्ट आर्टिकल लिंक कॉपी करें:
+      </label>
+      <div class="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-1.5">
+        <input
+          type="text"
+          readonly
+          [value]="getShareUrl()"
+          class="text-xs text-slate-700 bg-transparent flex-1 px-2 border-0 outline-none truncate"
+        />
+        <button
+          type="button"
+          (click)="copyShareModalLink()"
+          [class.bg-emerald-600]="isLinkCopied"
+          [class.bg-red-600]="!isLinkCopied"
+          class="px-3.5 py-1.5 rounded-lg text-white text-xs font-bold transition shadow-sm cursor-pointer whitespace-nowrap"
+        >
+          {{ isLinkCopied ? '✓ Copied!' : 'कॉपी करें' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

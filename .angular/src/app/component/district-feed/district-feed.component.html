@@ -1,0 +1,315 @@
+<app-header></app-header>
+
+<main class="bg-white text-slate-900 min-h-screen pb-16 font-sans">
+
+  <div class="max-w-7xl mx-auto px-4 pt-8">
+
+    <!-- Title Banner -->
+    <div
+      class="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg mb-8 flex flex-wrap items-center justify-between gap-4"
+    >
+
+      <div>
+
+        <h1
+          class="text-2xl sm:text-3xl font-black text-slate-900 font-serif tracking-tight"
+        >
+          {{ pageTitle }}
+        </h1>
+
+        <p class="text-xs text-amber-600 font-medium">
+          सत्य संवाद • विशेष रिपोर्ट
+        </p>
+
+      </div>
+
+      <div
+        class="text-xs text-slate-600 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200"
+      >
+        कुल समाचार:
+
+        <span class="text-red-600 font-bold text-sm">
+          {{ articles.length }}
+        </span>
+      </div>
+
+    </div>
+
+
+    <!-- Skeleton Shimmer Loader Grid -->
+    <div *ngIf="isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div *ngFor="let item of [1, 2, 3, 4, 5, 6]" class="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-md animate-pulse">
+        <div class="h-48 bg-slate-200 rounded-lg w-full"></div>
+        <div class="h-4 bg-slate-200 rounded w-1/4"></div>
+        <div class="h-5 bg-slate-200 rounded w-full"></div>
+        <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+      </div>
+    </div>
+
+    <!-- Articles Grid -->
+    <div
+      *ngIf="!isLoading && articles.length > 0; else noArticles"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+
+      <div
+        *ngFor="let article of articles"
+        (click)="openArticle(article.id)"
+        class="bg-white rounded-xl border border-slate-200 hover:border-red-500 shadow-md hover:shadow-xl overflow-hidden group cursor-pointer flex flex-col justify-between transition-all duration-300 hover:-translate-y-1"
+      >
+
+        <div>
+
+          <!-- Article Image -->
+          <div class="relative h-48 w-full overflow-hidden">
+
+            <img
+              [src]="article.thumbnailUrl"
+              [alt]="article.title"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            >
+
+            <!-- District -->
+            <span
+              class="absolute top-2 left-2 bg-red-700 text-white font-bold text-[10px] px-2.5 py-0.5 rounded shadow uppercase"
+            >
+              📍 {{ article.districtName }}
+            </span>
+
+            <!-- Category -->
+            <span
+              class="absolute top-2 right-2 bg-slate-900/80 text-amber-300 font-medium text-[10px] px-2 py-0.5 rounded backdrop-blur"
+            >
+              {{ article.categoryName }}
+            </span>
+
+          </div>
+
+
+          <!-- Article Content -->
+          <div class="p-4 space-y-2">
+
+            <h3
+              class="text-base font-bold text-slate-900 group-hover:text-red-600 transition leading-snug line-clamp-2 font-serif"
+            >
+              {{ article.title }}
+            </h3>
+
+            <p
+              class="text-xs text-slate-600 line-clamp-2 leading-relaxed"
+            >
+              {{ article.summary }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Article Footer -->
+        <!-- Article Footer -->
+        <div
+          class="p-4 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500"
+        >
+          <div class="flex items-center gap-2">
+            <span>✍️ {{ article.authorName }}</span>
+            <span>•</span>
+            <span>👁️ {{ article.viewCount }}</span>
+          </div>
+
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); openShareModal(article)"
+            class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center gap-1 transition shadow-sm border border-emerald-200 cursor-pointer"
+            title="सोशल मीडिया पर शेयर करें"
+          >
+            <span>📤</span>
+            <span>शेयर</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- No Articles Fallback -->
+    <ng-template #noArticles>
+
+      <div
+        class="bg-white p-12 rounded-2xl border border-slate-200 text-center space-y-4 shadow-md"
+      >
+
+        <div class="text-4xl">
+          📰
+        </div>
+
+        <h3
+          class="text-lg font-bold text-slate-900 font-serif"
+        >
+          कोई खबर नहीं मिली
+        </h3>
+
+        <p class="text-xs text-slate-600">
+          इस फिल्टर के अंतर्गत वर्तमान में कोई खबर उपलब्ध नहीं है।
+        </p>
+
+        <a
+          routerLink="/home"
+          class="inline-block bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-6 py-2 rounded text-xs transition shadow"
+        >
+          मुख्य पृष्ठ पर लौटें
+        </a>
+
+      </div>
+
+    </ng-template>
+
+  </div>
+
+</main>
+
+<!-- ========================================================= -->
+<!-- DISTRICT FEED SOCIAL MEDIA SHARE MODAL / POPUP -->
+<!-- ========================================================= -->
+<div
+  *ngIf="isShareModalOpen && selectedArticleForShare"
+  class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+  style="animation: fadeIn 0.2s ease-in-out;"
+  (click)="closeShareModal()"
+>
+  <div
+    class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 relative border border-slate-200 transform transition-all"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Close Button -->
+    <button
+      type="button"
+      (click)="closeShareModal()"
+      class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold transition cursor-pointer"
+      title="बंद करें"
+    >
+      ✕
+    </button>
+
+    <!-- Modal Header -->
+    <div class="text-center pb-4 border-b border-slate-100">
+      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-2 shadow-inner">
+        📤
+      </div>
+      <h3 class="text-lg font-black text-slate-900 font-serif">
+        समाचार शेयर करें
+      </h3>
+      <p class="text-xs text-slate-500 font-medium mt-1 truncate px-4">
+        {{ selectedArticleForShare.title }}
+      </p>
+    </div>
+
+    <!-- Social Media Grid -->
+    <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 py-5">
+      
+      <!-- WhatsApp -->
+      <button
+        type="button"
+        (click)="shareTo('whatsapp')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-green-50 transition group cursor-pointer border border-transparent hover:border-green-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-green-500 group-hover:scale-110 text-white flex items-center justify-center text-2xl shadow-md transition-transform">
+          💬
+        </div>
+        <span class="text-xs font-bold text-slate-800">WhatsApp</span>
+      </button>
+
+      <!-- Facebook -->
+      <button
+        type="button"
+        (click)="shareTo('facebook')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-blue-50 transition group cursor-pointer border border-transparent hover:border-blue-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-blue-600 group-hover:scale-110 text-white flex items-center justify-center text-2xl font-black shadow-md transition-transform">
+          f
+        </div>
+        <span class="text-xs font-bold text-slate-800">Facebook</span>
+      </button>
+
+      <!-- X (Twitter) -->
+      <button
+        type="button"
+        (click)="shareTo('twitter')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-slate-100 transition group cursor-pointer border border-transparent hover:border-slate-300"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-slate-900 group-hover:scale-110 text-white flex items-center justify-center text-lg font-bold shadow-md transition-transform">
+          𝕏
+        </div>
+        <span class="text-xs font-bold text-slate-800">X (Twitter)</span>
+      </button>
+
+      <!-- Telegram -->
+      <button
+        type="button"
+        (click)="shareTo('telegram')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-sky-50 transition group cursor-pointer border border-transparent hover:border-sky-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-sky-500 group-hover:scale-110 text-white flex items-center justify-center text-xl shadow-md transition-transform">
+          ✈️
+        </div>
+        <span class="text-xs font-bold text-slate-800">Telegram</span>
+      </button>
+
+      <!-- LinkedIn -->
+      <button
+        type="button"
+        (click)="shareTo('linkedin')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-blue-50 transition group cursor-pointer border border-transparent hover:border-blue-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-blue-700 group-hover:scale-110 text-white flex items-center justify-center text-lg font-bold shadow-md transition-transform">
+          in
+        </div>
+        <span class="text-xs font-bold text-slate-800">LinkedIn</span>
+      </button>
+
+      <!-- Native Share / All Apps -->
+      <button
+        *ngIf="hasNativeShare()"
+        type="button"
+        (click)="shareTo('native')"
+        class="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-purple-50 transition group cursor-pointer border border-transparent hover:border-purple-200"
+      >
+        <div class="w-12 h-12 rounded-2xl bg-purple-600 group-hover:scale-110 text-white flex items-center justify-center text-xl shadow-md transition-transform">
+          📲
+        </div>
+        <span class="text-xs font-bold text-slate-800">More Apps</span>
+      </button>
+
+    </div>
+
+    <!-- Copy Direct Link Box -->
+    <div class="pt-3 border-t border-slate-100">
+      <label class="block text-[11px] font-bold text-slate-600 mb-1.5">
+        डायरेक्ट आर्टिकल लिंक कॉपी करें:
+      </label>
+      <div class="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-1.5">
+        <input
+          type="text"
+          readonly
+          [value]="getShareUrl()"
+          class="text-xs text-slate-700 bg-transparent flex-1 px-2 border-0 outline-none truncate"
+        />
+        <button
+          type="button"
+          (click)="copyShareModalLink()"
+          [class.bg-emerald-600]="isLinkCopied"
+          [class.bg-red-600]="!isLinkCopied"
+          class="px-3.5 py-1.5 rounded-lg text-white text-xs font-bold transition shadow-sm cursor-pointer whitespace-nowrap"
+        >
+          {{ isLinkCopied ? '✓ Copied!' : 'कॉपी करें' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

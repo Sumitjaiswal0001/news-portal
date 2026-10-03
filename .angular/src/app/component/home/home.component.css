@@ -1,0 +1,33 @@
+/* Responsive Adjustments for Mobile & Tablet viewports */
+@media (max-width: 768px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Breaking News Continuous Ticker Slider */
+.ticker-container {
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: ticker-marquee 200s linear infinite;
+}
+
+.ticker-container:hover .ticker-content {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

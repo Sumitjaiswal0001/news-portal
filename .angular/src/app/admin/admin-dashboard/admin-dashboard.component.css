@@ -1,0 +1,42 @@
+/* Custom Dashboard Card Shadows & Animations */
+.dashboard-card {
+  border: none;
+  border-radius: 1.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+/* Squircle Icon Boxes */
+.metric-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Table Enhancements */
+.custom-table th {
+  border-bottom: none;
+  letter-spacing: 0.5px;
+}
+
+.custom-table td {
+  vertical-align: middle;
+}
+
+.hover-bg-light:hover {
+  background-color: #f8f9fa !important;
+}
+
+/* Soft transition for Breaking News toggle button */
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}

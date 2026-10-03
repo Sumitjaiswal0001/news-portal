@@ -1,0 +1,187 @@
+<main id="main" class="main">
+
+  <!-- Page Title & Breadcrumb -->
+  <div class="row mb-3">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>Manage Categories & Districts</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+          <li class="breadcrumb-item">Master</li>
+          <li class="breadcrumb-item active">Categories & Districts</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="row">
+      
+      <!-- Category Creation Form & List -->
+      <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title border-bottom pb-2 mb-3">
+              {{ editingCategoryId ? '✏️ Edit Category' : '+ Add New Category' }}
+            </h5>
+            
+            <form (submit)="saveCategory()">
+              <div class="mb-3">
+                <label class="form-label font-bold text-xs">Category Name (English):</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="newCategoryName" 
+                  name="catName"
+                  placeholder="e.g. Technology" 
+                  class="form-control form-control-sm"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label font-bold text-xs">Category Name (Hindi):</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="newCategoryHindi" 
+                  name="catHindi"
+                  placeholder="e.g. Technology (Hindi)" 
+                  class="form-control form-control-sm"
+                  required
+                />
+              </div>
+
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                  {{ editingCategoryId ? 'Update Category' : '+ Add Category' }}
+                </button>
+                <button type="button" *ngIf="editingCategoryId" (click)="cancelCategoryEdit()" class="btn btn-secondary btn-sm">
+                  Cancel
+                </button>
+              </div>
+            </form>
+
+            <h6 class="font-bold text-xs mt-4 mb-2">Current Categories:</h6>
+            <div class="table-container overflow-auto" style="max-height: 350px;">
+              <table class="table table-sm table-bordered table-hover align-middle">
+                <thead class="table-light sticky-top">
+                  <tr>
+                    <th style="width: 40px;">#</th>
+                    <th>Name (English)</th>
+                    <th>Name (Hindi)</th>
+                    <th class="text-end" style="width: 90px;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let c of categories; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ c.name }}</td>
+                    <td class="fw-bold text-primary">{{ c.hindiName }}</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-warning me-1 p-1 px-2" (click)="editCategory(c)" title="Edit Category">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger p-1 px-2" (click)="deleteCategory(c.id)" title="Delete Category">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Jharkhand 24 Districts Master Card -->
+      <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+              <h5 class="card-title p-0 m-0">📍 24 Districts Master</h5>
+              <button class="btn btn-sm btn-primary" (click)="openAddDistrictModal()">
+                + Add District
+              </button>
+            </div>
+            
+            <div class="table-container overflow-auto" style="max-height: 400px;">
+              <table class="table table-sm table-bordered table-hover align-middle">
+                <thead class="table-light sticky-top">
+                  <tr>
+                    <th>Code</th>
+                    <th>District Name</th>
+                    <th>Hindi Name</th>
+                    <th>Division</th>
+                    <th class="text-end" style="width: 90px;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of districts">
+                    <td><span class="badge text-bg-secondary">{{ d.code }}</span></td>
+                    <td class="fw-bold text-dark">{{ d.name }}</td>
+                    <td class="text-danger fw-bold">{{ d.hindiName }}</td>
+                    <td class="text-muted small">{{ d.division }}</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-warning me-1 p-1 px-2" (click)="editDistrict(d)" title="Edit District">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger p-1 px-2" (click)="deleteDistrict(d.id)" title="Delete District">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- District Add / Edit Modal -->
+  <div class="modal fade" id="districtModal" tabindex="-1" aria-labelledby="districtModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="districtModalLabel">
+            {{ editingDistrictId ? 'Update District' : 'Add New District' }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form (submit)="saveDistrict()">
+            <div class="mb-3">
+              <label class="form-label font-bold text-xs">District Name (English) *</label>
+              <input type="text" [(ngModel)]="districtForm.name" name="distName" class="form-control form-control-sm" placeholder="e.g. Ranchi" required />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label font-bold text-xs">District Name (Hindi) *</label>
+              <input type="text" [(ngModel)]="districtForm.hindiName" name="distHindi" class="form-control form-control-sm" placeholder="e.g. Ranchi (Hindi)" required />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label font-bold text-xs">Division</label>
+              <input type="text" [(ngModel)]="districtForm.division" name="distDivision" class="form-control form-control-sm" placeholder="e.g. South Chota Nagpur" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label font-bold text-xs">District Code</label>
+              <input type="text" [(ngModel)]="districtForm.code" name="distCode" class="form-control form-control-sm" placeholder="e.g. RAN" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary btn-sm" (click)="saveDistrict()">
+            {{ editingDistrictId ? 'Update District' : 'Add District' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>

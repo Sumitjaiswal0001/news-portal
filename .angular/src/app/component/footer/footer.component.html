@@ -1,0 +1,253 @@
+<footer class="bg-white text-slate-700 border-t-4 border-red-700 font-sans pt-12 pb-6">
+
+  <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+
+    <!-- ========================================================= -->
+    <!-- Brand & About -->
+    <!-- ========================================================= -->
+    <div class="space-y-4">
+
+      <!-- Logo + Brand -->
+      <div class="flex items-center space-x-3">
+
+        <a routerLink="/" class="flex shrink-0 items-center gap-2" aria-label="सत्य संवाद मुख्य पृष्ठ">
+
+          <img src="assets/img/satya_samvad_logo.png" alt="सत्य संवाद" class="h-12 w-auto object-contain sm:h-14" />
+
+        </a>
+
+        <div>
+
+          <h2 class="text-xl font-black text-slate-900 font-serif tracking-tight">
+            सत्य संवाद
+          </h2>
+
+          <p class="text-xs text-amber-600 font-bold">
+            सच की आवाज़, समाज के साथ
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- About -->
+      <p class="text-xs text-slate-600 leading-relaxed">
+        झारखण्ड राज्य के सभी 24 जिलों की सटीक, निष्पक्ष और त्वरित ताजा खबरें।
+        राजनीति, उद्योग, रोजगार, अपराध, खेल और जनहित के मुद्दों का एकमात्र
+        विश्वस्त पोर्टल।
+      </p>
+
+
+      <!-- Office Details -->
+      <div class="text-xs text-slate-600 space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-200 shadow-sm">
+
+
+        <p>
+          Chouparan, Hazaribag, Jharkhand - 825406 </p>
+
+        <p class="text-red-600 font-medium">
+          ईमेल: satyasamwad7@gmail.com
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- 24 Districts Sitemap -->
+    <!-- ========================================================= -->
+    <div class="space-y-3">
+
+      <h3 class="text-sm font-bold text-amber-600 uppercase tracking-wider border-b border-slate-200 pb-2">
+        झारखण्ड के 24 जिले (Districts)
+      </h3>
+
+
+      <div class="grid grid-cols-2 gap-1.5 max-h-56 overflow-y-auto pr-1 text-xs">
+
+        <button *ngFor="let dist of districts" (click)="onDistrictSelect(dist.id)"
+          class="text-left text-slate-600 hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded transition flex items-center justify-between">
+
+          <span>
+            {{ dist.name }}
+          </span>
+
+          <!-- <span class="text-[10px] text-red-500">
+            ({{ dist.hindiName }})
+          </span> -->
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- News Categories -->
+    <!-- ========================================================= -->
+    <div class="space-y-3">
+
+      <h3 class="text-sm font-bold text-amber-600 uppercase tracking-wider border-b border-slate-200 pb-2">
+        खबरों की श्रेणियां (Categories)
+      </h3>
+
+
+      <ul class="space-y-2 text-xs">
+
+        <li *ngFor="let cat of categories">
+
+          <button (click)="onCategorySelect(cat.id)"
+            class="text-slate-600 hover:text-red-600 hover:translate-x-1 transition-transform inline-flex items-center space-x-2">
+
+            <span class="text-red-500">
+              •
+            </span>
+
+            <span>
+              {{ cat.hindiName }} ({{ cat.name }})
+            </span>
+
+          </button>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Newsletter & Emergency Helplines -->
+    <!-- ========================================================= -->
+    <div class="space-y-4">
+
+      <h3 class="text-sm font-bold text-amber-600 uppercase tracking-wider border-b border-slate-200 pb-2">
+        न्यूज़लेटर एवं अलर्ट्स
+      </h3>
+
+
+      <p class="text-xs text-slate-600">
+        झारखण्ड की दिनभर की 5 बड़ी खबरें अपने ईमेल पर मुफ्त पाएं:
+      </p>
+
+
+      <!-- Newsletter -->
+      <div class="space-y-2">
+
+        <input type="email" [(ngModel)]="subscriberEmail" placeholder="आपका ईमेल (Email Address)..."
+          class="w-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200" />
+
+
+        <button (click)="onSubscribe()"
+          class="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 rounded text-xs transition shadow">
+          सब्सक्राइब करें (Free Subscribe)
+        </button>
+
+
+        <!-- Success Message -->
+        <div *ngIf="subscribedSuccess"
+          class="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs p-2 rounded text-center">
+          ✓ धन्यवाद! आपका ईमेल पंजीकृत हो गया है।
+        </div>
+
+      </div>
+
+
+      <!-- Emergency Helpline -->
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs space-y-1 text-amber-800">
+
+        <div class="font-bold text-amber-700 flex items-center space-x-1">
+          <span>
+            🚨 झारखण्ड आपातकालीन नंबर:
+          </span>
+        </div>
+
+
+        <div class="flex justify-between text-[11px] text-slate-700">
+
+          <span>
+            पुलिस (Ranchi Police): 112 / 100
+          </span>
+
+          <span>
+            एंबुलेंस: 108
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- Bottom Copyright Bar -->
+  <!-- ========================================================= -->
+  <div
+    class="max-w-7xl mx-auto px-4 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-4">
+
+    <div>
+      © 2026 सत्य संवाद | All Rights Reserved.
+      सर्वाधिकार सुरक्षित।
+    </div>
+
+
+    <div class="flex flex-wrap items-center gap-2">
+      <a routerLink="/about-us"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-red-600 hover:text-white transition shadow-sm border border-slate-200">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        हमारे बारे में
+      </a>
+
+      <a routerLink="/contact-us"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-red-600 hover:text-white transition shadow-sm border border-slate-200">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        संपर्क करें
+      </a>
+
+      <a routerLink="/advertisement"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-red-600 hover:text-white transition shadow-sm border border-slate-200">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+        </svg>
+        विज्ञापन दें
+      </a>
+
+      <a routerLink="/vacancy"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-red-600 hover:text-white transition shadow-sm border border-slate-200">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        करियर / वैकेंसी
+      </a>
+
+      <a routerLink="/privacy-policy"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-red-600 hover:text-white transition shadow-sm border border-slate-200">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        गोपनीयता नीति
+      </a>
+
+
+    </div>
+
+  </div>
+
+</footer>

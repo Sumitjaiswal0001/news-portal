@@ -1,0 +1,812 @@
+<!-- ========================================================= -->
+<!-- SATYA SAMVAD HEADER -->
+<!-- ========================================================= -->
+
+<header class="w-full bg-white shadow-sm ">
+
+  <!-- ======================================================= -->
+  <!-- TOP INFORMATION BAR -->
+  <!-- ======================================================= -->
+
+  <div
+    class="bg-gradient-to-r from-red-700 via-red-600 to-amber-600
+           text-white text-xs py-2 px-4">
+
+    <div
+      class="max-w-7xl mx-auto
+             flex flex-wrap
+             items-center
+             justify-between
+             gap-3">
+
+      <!-- DATE -->
+      <div class="flex items-center gap-2">
+        <span>📅</span>
+        <span>
+          {{ currentDateStr }}
+        </span>
+      </div>
+
+      <!-- TAGLINE -->
+      <div class="hidden sm:flex items-center gap-2">
+        <span class="text-yellow-200">
+          ●
+        </span>
+        <span class="font-semibold">
+          सच की आवाज़, समाज के साथ
+        </span>
+        <span class="text-yellow-200">
+          ●
+        </span>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline">
+          झारखंड
+        </span>
+        <span class="opacity-50">
+          |
+        </span>
+        <span>
+          24 जिले
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================= -->
+  <!-- BREAKING NEWS -->
+  <!-- ======================================================= -->
+
+  <div
+    *ngIf="breakingNews.length > 0"
+    class="border-b border-red-100 bg-white">
+
+    <div
+      class="max-w-7xl mx-auto
+             flex items-center
+             overflow-hidden">
+
+      <!-- BREAKING LABEL -->
+      <div
+        class="relative z-10
+               flex-shrink-0
+               flex items-center gap-2
+               bg-red-600
+               text-white
+               px-4 py-2
+               text-xs font-bold">
+
+        <span class="relative flex h-2 w-2">
+          <span
+            class="absolute inline-flex
+                   h-full w-full
+                   animate-ping
+                   rounded-full
+                   bg-white opacity-75">
+          </span>
+          <span
+            class="relative inline-flex
+                   h-2 w-2
+                   rounded-full
+                   bg-white">
+          </span>
+        </span>
+        ब्रेकिंग न्यूज़
+      </div>
+
+      <!-- NEWS LIST (SLOW SMOOTH CONTINUOUS SCROLL) -->
+      <div class="flex-1 overflow-hidden">
+        <marquee scrollamount="2" scrolldelay="20" onmouseover="this.stop()" onmouseout="this.start()" class="py-1">
+          <span *ngFor="let news of breakingNews" class="inline-flex items-center gap-2 text-sm font-medium text-slate-800 mr-10">
+            <span class="h-2 w-2 rounded-full bg-red-600 inline-block"></span>
+            <a [routerLink]="['/article', news.id]" class="hover:text-red-600 transition cursor-pointer">
+              {{ news.title }}
+            </a>
+          </span>
+        </marquee>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================= -->
+  <!-- MAIN LOGO / SEARCH / SOCIAL HEADER -->
+  <!-- ======================================================= -->
+
+  <div
+    class="border-b border-gray-200
+           bg-white">
+
+    <div
+      class="max-w-7xl mx-auto
+             px-4 sm:px-6 lg:px-8">
+
+      <div
+        class="min-h-[88px]
+               flex items-center
+               justify-between
+               gap-4">
+
+        <!-- ================================================= -->
+        <!-- LOGO -->
+        <!-- ================================================= -->
+        <a
+          routerLink="/"
+          class="flex items-center
+                 gap-3
+                 flex-shrink-0
+                 group">
+
+          <img
+            src="assets/img/satya_samvad_logo.png"
+            alt="सत्य संवाद"
+            class="h-16 w-auto
+                   object-contain
+                   transition
+                   duration-300
+                   group-hover:scale-105"
+          >
+
+          <!-- TEXT -->
+          <div class="hidden sm:block">
+            <h1
+              class="text-2xl
+                     font-black
+                     text-red-600
+                     leading-none
+                     font-serif">
+              सत्य संवाद
+            </h1>
+            <p
+              class="mt-1
+                     text-[11px]
+                     font-semibold
+                     text-gray-500">
+              सच की आवाज़, समाज के साथ
+            </p>
+          </div>
+
+        </a>
+
+
+        <!-- ================================================= -->
+        <!-- SEARCH -->
+        <!-- ================================================= -->
+        <div
+          class="hidden lg:flex
+                 flex-1
+                 justify-center
+                 px-6">
+
+          <form
+            (ngSubmit)="onSearch()"
+            class="relative
+                   w-full
+                   max-w-xl">
+
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              name="searchQuery"
+              placeholder="खबर खोजें..."
+              autocomplete="off"
+              class="w-full
+                     h-11
+                     rounded-full
+                     border border-gray-200
+                     bg-gray-50
+                     pl-11 pr-24
+                     text-sm
+                     text-gray-800
+                     outline-none
+                     transition
+                     focus:border-red-400
+                     focus:bg-white
+                     focus:ring-4
+                     focus:ring-red-100"
+            >
+
+            <!-- SEARCH ICON -->
+            <svg
+              class="absolute
+                     left-4 top-1/2
+                     -translate-y-1/2
+                     h-5 w-5
+                     text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path stroke-linecap="round" d="M20 20l-4-4"></path>
+            </svg>
+
+            <!-- SEARCH BUTTON -->
+            <button
+              type="submit"
+              class="absolute
+                     right-1
+                     top-1/2
+                     -translate-y-1/2
+                     rounded-full
+                     bg-red-600
+                     px-5 py-2
+                     text-xs
+                     font-bold
+                     text-white
+                     transition
+                     hover:bg-red-700">
+              खोजें
+            </button>
+
+          </form>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- RIGHT SIDE -->
+        <!-- ================================================= -->
+        <div class="flex items-center gap-2">
+
+          <!-- FACEBOOK -->
+          <a
+            [href]="socialLinks.facebook"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Facebook"
+            class="hidden lg:flex
+                   h-9 w-9
+                   items-center
+                   justify-center
+                   rounded-full
+                   border border-gray-200
+                   text-gray-500
+                   hover:bg-blue-50
+                   hover:text-blue-600
+                   transition">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v8h4v-8h3l1-4h-4V9c0-.66.34-1 1-1z"></path>
+            </svg>
+          </a>
+
+          <!-- INSTAGRAM -->
+          <a
+            [href]="socialLinks.instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Instagram"
+            class="hidden lg:flex
+                   h-9 w-9
+                   items-center
+                   justify-center
+                   rounded-full
+                   border border-gray-200
+                   text-gray-500
+                   hover:bg-pink-50
+                   hover:text-pink-600
+                   transition">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </a>
+
+          <!-- YOUTUBE -->
+          <a
+            [href]="socialLinks.youtube"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="YouTube"
+            class="hidden lg:flex
+                   h-9 w-9
+                   items-center
+                   justify-center
+                   rounded-full
+                   border border-gray-200
+                   text-gray-500
+                   hover:bg-red-50
+                   hover:text-red-600
+                   transition">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"></path>
+            </svg>
+          </a>
+
+          <!-- X -->
+          <a
+            [href]="socialLinks.twitter"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="X"
+            class="hidden lg:flex
+                   h-9 w-9
+                   items-center
+                   justify-center
+                   rounded-full
+                   border border-gray-200
+                   text-gray-500
+                   hover:bg-gray-100
+                   hover:text-black
+                   transition">
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26L22.827 21.75h-6.604l-5.17-6.756-5.916 6.756H1.827l7.73-8.835L1.173 2.25H7.94l4.673 6.169 5.631-6.169zM17.083 19.5h1.833L7.084 4.375H5.117L17.083 19.5z"></path>
+            </svg>
+          </a>
+
+          <!-- WHATSAPP -->
+          <a
+            [href]="socialLinks.whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="WhatsApp"
+            class="hidden lg:flex
+                   h-9 w-9
+                   items-center
+                   justify-center
+                   rounded-full
+                   border border-gray-200
+                   text-gray-500
+                   hover:bg-green-50
+                   hover:text-green-600
+                   transition">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.5 11.5a8.5 8.5 0 0 1-12.8 7.4L3.5 20l1.1-4.1A8.5 8.5 0 1 1 20.5 11.5z"></path>
+            </svg>
+          </a>
+
+          <!-- MOBILE MENU -->
+          <button
+            type="button"
+            (click)="toggleMobileMenu()"
+            class="flex lg:hidden
+                   h-10 w-10
+                   items-center
+                   justify-center
+                   rounded-full
+                   border border-gray-200
+                   text-gray-700
+                   hover:bg-red-50
+                   hover:text-red-600">
+            <svg *ngIf="!isMobileMenuOpen" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <svg *ngIf="isMobileMenuOpen" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18"></path>
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+<!-- ========================================================= -->
+<!-- DESKTOP NAVBAR (Clean White Style with "More" Dropdown) -->
+<!-- ========================================================= -->
+<nav class="sticky top-0 z-[9990] hidden lg:block h-[48px] w-full border-b border-gray-200 bg-white shadow-sm">
+  <div class="max-w-7xl mx-auto h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
+    
+    <!-- LEFT CATEGORIES (First 8-9 items shown directly) -->
+    <div class="flex items-center h-full space-x-1 overflow-x-hidden">
+      
+      <!-- Home Link -->
+      <a routerLink="/" routerLinkActive="text-red-600 border-b-2 border-red-600 font-bold bg-red-50/50" [routerLinkActiveOptions]="{ exact: true }" class="h-full flex items-center px-3 text-sm font-semibold text-gray-800 transition hover:text-red-600 hover:bg-gray-50">
+        होम
+      </a>
+
+      <!-- District Link / Button -->
+      <button type="button" (click)="toggleDistrictDropdown()" class="h-full flex items-center gap-1.5 px-3 text-sm font-semibold text-gray-800 transition hover:text-red-600 hover:bg-gray-50" [class.text-red-600]="isDistrictDropdownOpen">
+        <span>📍 जिला चुनें</span>
+        <span class="rounded-full bg-red-100 px-1.5 py-0.5 text-[9px] font-bold text-red-600">24</span>
+      </button>
+
+      <!-- Main Categories Loop (Limit main display to first 8 items to prevent crowding) -->
+      <ng-container *ngFor="let category of categories.slice(0, 8); let i = index">
+        <button 
+          type="button" 
+          (click)="onCategorySelect(category.id)" 
+          class="h-full px-3 text-sm font-medium text-gray-700 transition hover:text-red-600 hover:bg-gray-50 relative group">
+          {{ category.hindiName || category.name }}
+          <!-- Active Bottom Red Indicator Line -->
+          <div class="absolute bottom-0 left-0 w-full h-[3px] bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </button>
+      </ng-container>
+
+      <!-- MORE CATEGORIES DROPDOWN (If there are more than 8 categories) -->
+      <div class="relative group h-full flex items-center" *ngIf="categories.length > 8">
+        <button type="button" class="h-full px-3 text-sm font-bold text-gray-700 flex items-center gap-1 hover:text-red-600 hover:bg-gray-50 transition">
+          <span>•••</span>
+        </button>
+
+        <!-- Dropdown Menu Box -->
+        <div class="absolute top-full left-0 w-48 bg-white border border-gray-200 shadow-xl rounded-xl py-2 hidden group-hover:block z-50">
+          <button 
+            *ngFor="let category of categories.slice(8)" 
+            type="button" 
+            (click)="onCategorySelect(category.id)" 
+            class="w-full text-left px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
+            {{ category.hindiName || category.name }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</nav>
+
+
+<!-- ========================================================= -->
+<!-- MOBILE MENU -->
+<!-- ========================================================= -->
+
+<div
+  *ngIf="isMobileMenuOpen"
+  class="lg:hidden
+         border-b border-gray-200
+         bg-white
+         shadow-lg">
+
+  <div
+    class="max-w-7xl mx-auto
+           px-4 py-4
+           space-y-3">
+
+    <!-- MOBILE SEARCH -->
+    <form (ngSubmit)="onSearch()" class="relative">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        name="mobileSearchQuery"
+        placeholder="खबर खोजें..."
+        class="w-full
+               h-11
+               rounded-xl
+               border border-gray-200
+               bg-gray-50
+               pl-11 pr-20
+               text-sm
+               outline-none
+               focus:border-red-400
+               focus:bg-white
+               focus:ring-4
+               focus:ring-red-100"
+      >
+      <svg class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path stroke-linecap="round" d="M20 20l-4-4"></path>
+      </svg>
+      <button
+        type="submit"
+        class="absolute right-1 top-1/2 -translate-y-1/2 rounded-lg bg-red-600 px-4 py-2 text-xs font-bold text-white">
+        खोजें
+      </button>
+    </form>
+
+    <!-- HOME -->
+    <a
+      routerLink="/"
+      (click)="isMobileMenuOpen = false"
+      class="flex items-center gap-3
+             rounded-xl
+             px-4 py-3
+             text-sm font-semibold
+             text-gray-700
+             hover:bg-red-50
+             hover:text-red-600">
+      🏠
+      <span>
+        मुख्य पृष्ठ
+      </span>
+    </a>
+
+    <!-- DISTRICT -->
+    <button
+      type="button"
+      (click)="toggleDistrictDropdown()"
+      class="w-full
+             flex items-center
+             justify-between
+             rounded-xl
+             bg-red-50
+             px-4 py-3
+             text-sm
+             font-semibold
+             text-red-700
+             hover:bg-red-100">
+      <span class="flex items-center gap-3">
+        📍
+        <span>
+          जिला चुनिए
+        </span>
+        <span class="rounded-full bg-red-600 px-2 py-0.5 text-[10px] text-white">
+          24
+        </span>
+      </span>
+      <span>
+        →
+      </span>
+    </button>
+
+    <!-- CATEGORIES -->
+    <div class="border-t border-gray-100 pt-3">
+      <div class="mb-2 px-2 text-xs font-bold text-gray-400">
+        समाचार श्रेणियां
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button
+          *ngFor="let category of categories"
+          type="button"
+          (click)="onCategorySelect(category.id); isMobileMenuOpen = false"
+          class="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-left text-sm font-medium text-gray-700 hover:border-red-300 hover:bg-red-50 hover:text-red-600">
+          {{ category.hindiName || category.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- SOCIAL -->
+    <div class="border-t border-gray-100 pt-4">
+      <p class="mb-3 px-2 text-xs font-bold text-gray-400">हमें फॉलो करें</p>
+      
+      <!-- Replaced grid-cols-5 with flex-wrap -->
+      <div class="flex flex-wrap gap-2">
+        <a [href]="socialLinks.facebook" target="_blank" rel="noopener noreferrer"
+           class="flex-1 min-w-[30%] flex h-10 items-center justify-center rounded-xl border bg-gray-50 text-xs font-semibold hover:bg-blue-50">
+          Facebook
+        </a>
+        <a [href]="socialLinks.instagram" target="_blank" rel="noopener noreferrer"
+           class="flex-1 min-w-[30%] flex h-10 items-center justify-center rounded-xl border bg-gray-50 text-xs font-semibold hover:bg-pink-50">
+          Instagram
+        </a>
+        <a [href]="socialLinks.youtube" target="_blank" rel="noopener noreferrer"
+           class="flex-1 min-w-[30%] flex h-10 items-center justify-center rounded-xl border bg-gray-50 text-xs font-semibold hover:bg-red-50">
+          YouTube
+        </a>
+        <a [href]="socialLinks.twitter" target="_blank" rel="noopener noreferrer"
+           class="flex-1 min-w-[20%] flex h-10 items-center justify-center rounded-xl border bg-gray-50 text-xs font-semibold hover:bg-gray-100">
+          X
+        </a>
+        <a [href]="socialLinks.whatsapp" target="_blank" rel="noopener noreferrer"
+           class="flex-1 min-w-[40%] flex h-10 items-center justify-center rounded-xl border bg-gray-50 text-xs font-semibold hover:bg-green-50">
+          WhatsApp
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- DISTRICT POPUP (RESPONSIVE BOTTOM SHEET / MODAL) -->
+<!-- ========================================================= -->
+
+<div
+  *ngIf="isDistrictDropdownOpen"
+  class="fixed inset-0
+         z-[99999]
+         flex items-end sm:items-center
+         justify-center
+         bg-black/60
+         p-0 sm:p-4
+         backdrop-blur-sm
+         transition-opacity"
+  (click)="closeDistrictPopup()"
+  tabindex="0">
+
+  <!-- POPUP CONTAINER -->
+  <div
+    class="w-full
+           sm:max-w-4xl
+           flex flex-col
+           max-h-[85vh] sm:max-h-[80vh]
+           rounded-t-3xl sm:rounded-2xl
+           bg-gray-50
+           shadow-2xl
+           overflow-hidden
+           transform transition-all"
+    (click)="$event.stopPropagation()">
+
+    <!-- MOBILE DRAG HANDLE (Visible only on small screens) -->
+    <div class="w-full flex justify-center pt-3 pb-2 bg-gradient-to-r from-red-600 to-red-700 sm:hidden rounded-t-3xl">
+      <div class="h-1.5 w-12 rounded-full bg-white/40"></div>
+    </div>
+
+    <!-- POPUP HEADER -->
+    <div
+      class="flex items-center
+             justify-between
+             bg-gradient-to-r
+             from-red-600
+             to-red-700
+             px-5 py-4
+             sm:rounded-t-2xl">
+
+      <div class="flex items-center gap-4">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-2xl shadow-inner">
+          📍
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-white tracking-wide">
+            अपना जिला चुनें
+          </h2>
+          <p class="text-xs font-medium text-red-100">
+            अपने जिले की ताज़ा खबरें सीधे पढ़ें
+          </p>
+        </div>
+      </div>
+
+      <!-- CLOSE BUTTON -->
+      <button
+        type="button"
+        (click)="closeDistrictPopup()"
+        class="flex h-10 w-10
+               items-center
+               justify-center
+               rounded-full
+               bg-white/10
+               text-white
+               transition
+               hover:bg-white/25
+               active:scale-95">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- POPUP BODY (SCROLLABLE AREA) -->
+    <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+
+      <!-- ALL JHARKHAND OPTION -->
+      <button
+        type="button"
+        (click)="onDistrictSelect('all')"
+        class="mb-6
+               flex w-full
+               items-center
+               justify-between
+               rounded-2xl
+               border border-red-200
+               bg-white
+               px-4 py-4
+               text-left
+               shadow-sm
+               transition-all duration-200
+               hover:-translate-y-1
+               hover:border-red-400
+               hover:bg-red-50
+               hover:shadow-md
+               active:scale-[0.98]">
+
+        <div class="flex items-center gap-4">
+          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600 text-xl">
+            📰
+          </div>
+          <div>
+            <div class="text-base font-bold text-gray-900">पूरा झारखंड</div>
+            <div class="text-xs font-semibold text-gray-500">सभी 24 जिलों की प्रमुख खबरें</div>
+          </div>
+        </div>
+
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </span>
+
+      </button>
+
+      <!-- TITLE & COUNT -->
+      <div class="mb-4 flex items-center justify-between px-2">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-800">
+          झारखंड के जिले
+        </h3>
+        <span
+          class="rounded-full
+                 bg-red-100
+                 px-3 py-1
+                 text-[11px]
+                 font-bold
+                 text-red-700">
+          {{ districts.length }} जिले
+        </span>
+      </div>
+
+      <!-- DISTRICTS GRID -->
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+
+        <button
+          *ngFor="let dist of districts"
+          type="button"
+          (click)="onDistrictSelect(dist.id)"
+          class="group
+                 flex
+                 items-center
+                 gap-3
+                 rounded-2xl
+                 border border-gray-200
+                 bg-white
+                 p-3
+                 text-left
+                 shadow-sm
+                 transition-all duration-200
+                 hover:-translate-y-1
+                 hover:border-red-400
+                 hover:bg-red-50
+                 hover:shadow-md
+                 active:scale-95">
+
+          <!-- Icon Pin -->
+          <div
+            class="flex h-10 w-10
+                   shrink-0
+                   items-center
+                   justify-center
+                   rounded-full
+                   bg-gray-50
+                   text-lg
+                   transition-transform duration-300
+                   group-hover:scale-110
+                   group-hover:bg-red-100">
+            📍
+          </div>
+
+          <!-- Text Container (Removed 'truncate', added line wrapping) -->
+          <div class="min-w-0 flex-1">
+            <div class="text-[13px] font-bold leading-tight text-gray-800 break-words transition-colors group-hover:text-red-700">
+              {{ dist.hindiName || dist.name }}
+            </div>
+            <div class="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400 break-words">
+              {{ dist.name }}
+            </div>
+          </div>
+
+        </button>
+
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div
+        *ngIf="districts.length === 0"
+        class="flex flex-col items-center justify-center py-12 text-center">
+        <div class="mb-3 text-5xl opacity-50">📍</div>
+        <p class="text-sm font-bold text-gray-500">जिलों की सूची उपलब्ध नहीं है।</p>
+        <p class="text-xs text-gray-400 mt-1">कृपया इंटरनेट कनेक्शन जांचें</p>
+      </div>
+
+    </div>
+
+    <!-- POPUP FOOTER -->
+    <div class="flex items-center justify-between bg-white px-5 py-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+      <span class="text-xs font-semibold text-gray-400">
+        अपना जिला चुनकर स्थानीय खबरें पढ़ें
+      </span>
+      <button
+        type="button"
+        (click)="closeDistrictPopup()"
+        class="rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-xs font-bold text-gray-600 transition hover:bg-red-50 hover:text-red-600 hover:border-red-200">
+        बंद करें
+      </button>
+    </div>
+
+  </div>
+
+</div>

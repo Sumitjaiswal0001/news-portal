@@ -1,0 +1,85 @@
+<app-header></app-header>
+
+<main class="bg-slate-50 min-h-screen py-5">
+  <div class="container">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-5">
+      <div class="bg-gradient-to-r from-red-700 via-red-600 to-red-700 text-white p-4 p-md-5 text-center">
+        <span class="badge bg-white text-danger fs-6 px-3 py-2 rounded-pill mb-3 shadow-sm">करियर एवं अवसर</span>
+        <h1 class="fw-bold mb-2 font-serif text-white">सत्य संवाद से जुड़ें (Career & Vacancy)</h1>
+        <p class="lead mb-0 text-white-50">पत्रकारिता और डिजिटल मीडिया में अपना उज्ज्वल भविष्य बनाएं। हम प्रतिभाशाली पत्रकारों और संपादकों की तलाश में हैं।</p>
+      </div>
+
+      <div class="card-body p-4 p-md-5">
+        <h3 class="fw-bold mb-4 border-bottom pb-3 text-dark font-serif"><i class="bi bi-briefcase-fill text-danger me-2"></i>वर्तमान में उपलब्ध पद (Open Positions)</h3>
+
+        <div class="row g-4 mb-5">
+          <div class="col-md-4" *ngFor="let job of jobs">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 d-flex flex-column hover-shadow transition bg-white">
+              <span class="badge bg-danger-subtle text-danger align-self-start mb-3 rounded-pill px-3 py-2 fw-semibold">{{ job.type }}</span>
+              <h5 class="fw-bold text-dark mb-2 font-serif">{{ job.title }}</h5>
+              <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1 text-danger"></i>{{ job.location }}</p>
+              <p class="text-muted small mb-3"><i class="bi bi-award me-1 text-danger"></i>अनुभव: {{ job.experience }}</p>
+              <p class="text-muted mb-4 small flex-grow-1 leading-relaxed">{{ job.desc }}</p>
+              <button class="btn btn-outline-danger w-100 rounded-pill fw-bold" (click)="openApply(job.title)" data-bs-toggle="modal" data-bs-target="#applyModal">
+                <i class="bi bi-person-plus-fill me-2"></i>आवेदन करें
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-light rounded-4 border text-center">
+          <h4 class="fw-bold text-dark mb-2 font-serif">क्या आपकी रुचि का पद सूचीबद्ध नहीं है?</h4>
+          <p class="text-muted mb-3">अपना बायोडाटा (Resume) हमें <a href="mailto:careers@satyasamvad.com" class="fw-bold text-danger">careers@satyasamvad.com</a> पर भेजें। भविष्य के अवसरों के लिए हमारी टीम आपसे संपर्क करेगी।</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal for Application -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header bg-danger text-white rounded-top-4">
+        <h5 class="modal-header-title fw-bold mb-0 text-white">आवेदन करें - {{ selectedJob }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div *ngIf="applied" class="alert alert-success rounded-3 p-3">
+          <h6 class="fw-bold mb-1"><i class="bi bi-check-circle-fill me-2"></i>आवेदन सफलतापूर्वक जमा हो गया!</h6>
+          <p class="small mb-0">आपकी जानकारी हमें मिल गई है। शॉर्टलिस्ट होने पर एचआर टीम संपर्क करेगी।</p>
+        </div>
+
+        <form (ngSubmit)="submitApplication()" #applyForm="ngForm" *ngIf="!applied">
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">पूरा नाम *</label>
+            <input type="text" class="form-control rounded-3" name="applicantName" [(ngModel)]="applicant.name" required placeholder="अपना नाम दर्ज करें">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">मोबाइल नंबर *</label>
+            <input type="tel" class="form-control rounded-3" name="applicantPhone" [(ngModel)]="applicant.phone" required placeholder="10-अंकीय फोन नंबर">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">ईमेल आईडी</label>
+            <input type="email" class="form-control rounded-3" name="applicantEmail" [(ngModel)]="applicant.email" placeholder="example@mail.com">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">रिज्यूमे / गूगल ड्राइव लिंक *</label>
+            <input type="url" class="form-control rounded-3" name="resumeUrl" [(ngModel)]="applicant.resumeUrl" placeholder="https://drive.google.com/..." required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-dark">संक्षिप्त टिप्पणी</label>
+            <textarea class="form-control rounded-3" rows="3" name="note" [(ngModel)]="applicant.note" placeholder="अपने अनुभव के बारे में लिखें..."></textarea>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold shadow-sm" [disabled]="!applyForm.valid">
+              आवेदन जमा करें
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

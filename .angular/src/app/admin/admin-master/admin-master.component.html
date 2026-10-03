@@ -1,0 +1,96 @@
+<!-- ======= Header ======= -->
+<app-progress *ngIf="dataLoading"></app-progress>
+<header id="header" class="header fixed-top d-flex align-items-center bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+
+  <div class="d-flex align-items-center justify-content-between">
+    <a routerLink="/admin/admin-dashboard" class="logo d-flex align-items-center space-x-2 text-decoration-none">
+      <img src="assets/img/satya_samvad_logo.png" alt="Satya Samvad" class="h-8 w-auto object-contain">
+      <span class="font-bold text-slate-900 dark:text-white text-sm">Satya Samvad Admin</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn cursor-pointer text-slate-700 dark:text-slate-200" (click)="hideSideBar()"></i>
+  </div><!-- End Logo -->
+
+  <div class="search-bar"></div>
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center space-x-3 mb-0">
+      
+      <!-- Theme Switcher Button -->
+      <li>
+      </li>
+
+    
+      <li class="nav-item dropdown pe-3">
+        <a class="nav-link nav-profile d-flex align-items-center pe-0 cursor-pointer" data-bs-toggle="dropdown">
+          <span class="d-none d-md-block dropdown-toggle ps-2 text-slate-900 dark:text-amber-300 font-bold">Editorial Desk</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li>
+            <a class="dropdown-item d-flex align-items-center" [routerLink]="'/admin/change-password'">
+              <i class="bi bi-gear"></i>
+              <span>Change Password</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" (click)="logOut()">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/admin-dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Admin Dashboard</span>
+      </a>
+    </li>
+
+
+
+    <li class="nav-heading text-slate-500 font-bold text-xs uppercase pt-3 pb-1">System Settings</li>
+
+    <!-- Updated Menu Loop using Native Bootstrap Attributes -->
+    <li class="nav-item" *ngFor="let menuOne of MenuList">
+      
+      <!-- 1. Added 'collapsed' class and data-bs-toggle attributes -->
+      <a class="nav-link collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#menu-' + menuOne.MenuId" style="cursor: pointer;">
+        <i [class]="menuOne.MenuIcon || 'bi bi-folder2-open'"></i>
+        <span>{{menuOne.MenuTitle}}</span>
+        <!-- Template CSS automatically rotates this chevron when opened -->
+        <i class="bi ms-auto bi-chevron-down"></i>
+      </a>
+
+      <!-- 2. Added data-bs-parent="#sidebar-nav" so opening one menu closes the others -->
+      <ul [id]="'menu-' + menuOne.MenuId" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li (click)="checkSideNav()" *ngFor="let menuTwo of menuOne.MenuList">
+          <a [routerLink]="menuTwo.PageUrl" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span>{{menuTwo.MenuTitle}}</span>
+          </a>
+        </li>
+      </ul>
+      
+    </li>
+
+  </ul>
+
+</aside><!-- End Sidebar-->
+
+<router-outlet></router-outlet>
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer fixed-footer">
+  <div class="copyright text-xs">
+    &copy; 2026 <strong><span>Satya Samvad</span></strong>. All Rights Reserved.
+  </div>
+</footer>

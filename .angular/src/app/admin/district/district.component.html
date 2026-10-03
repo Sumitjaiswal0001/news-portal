@@ -1,0 +1,119 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+<main id="main" class="main" *ngIf="action.ResponseReceived">
+    <div class="row">
+        <div class="pagetitle dashboard col-sm-8">
+            <h1>{{action.MenuTitle || 'Manage District'}}</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                    <li class="breadcrumb-item">{{action.ParentMenuTitle || 'Master Entry'}}</li>
+                    <li class="breadcrumb-item active">{{action.MenuTitle || 'Manage District'}}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-sm-4">
+            <button mat-raised-button class="float-right" color="primary" *ngIf="action.CanCreate"
+                data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">New District</button>
+        </div>
+    </div>
+
+    <section class="section dashboard">
+        <div class="card">
+            <div class="card-body">
+                <div class="dataTable-top">
+                    <div class="dataTable-dropdown d-flex">
+                        <select class="dataTable-selector form-select form-select-sm" [(ngModel)]="itemPerPage">
+                            <option *ngFor="let option of PageSize" [value]="option">{{option}}</option>
+                        </select>
+                        <span class="ms-2">Entries per page</span>
+                    </div>
+                    <div class="dataTable-search">
+                        <input class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                            placeholder="Search district or state..." type="text">
+                    </div>
+                </div>
+                <div class="table-container overflow-auto">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th style="cursor:pointer;" (click)="sort('DistrictName')">District Name</th>
+                                <th style="cursor:pointer;" (click)="sort('StateName')">State</th>
+                                <th *ngIf="action.CanEdit">Edit</th>
+                                <th *ngIf="action.CanDelete">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of DistrictList | filter:Search | orderBy:sortKey:reverse | paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index;">
+                                <td>{{(itemPerPage * (p - 1)) + i + 1}}</td>
+                                <td class="fw-bold">{{item.DistrictName}}</td>
+                                <td>{{item.StateName}}</td>
+                                <td *ngIf="action.CanEdit">
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop" (click)="editDistrict(item)">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </td>
+                                <td *ngIf="action.CanDelete">
+                                    <button class="btn btn-sm btn-danger" (click)="deleteDistrict(item)">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="dataTable-bottom">
+                    <pagination-controls (pageChange)="onTableDataChange($event)" style="float:right;"
+                        class="my-pagination"></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">{{District.DistrictId > 0 ? 'Update' : 'New'}} District</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="resetForm()"></button>
+                </div>
+                <div class="modal-body">
+                    <form #formDistrict="ngForm">
+                        <div class="container">
+                            <div class="row">
+                                <mat-form-field appearance="outline" class="col-sm-6">
+                                    <mat-label>District Name</mat-label>
+                                    <input matInput #DistrictName="ngModel" name="DistrictName" [(ngModel)]="District.DistrictName"
+                                        required autofocus>
+                                    <mat-error *ngIf="(DistrictName.dirty || DistrictName.touched) || (DistrictName.invalid && isSubmitted)">
+                                        District name is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="col-sm-6">
+                                    <mat-label>State</mat-label>
+                                    <mat-select #StateId="ngModel" name="StateId" [(ngModel)]="District.StateId" required>
+                                        <mat-option *ngFor="let option of StateList" [value]="option.StateId">
+                                            {{option.StateName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="(StateId.dirty || StateId.touched) || (StateId.invalid && isSubmitted)">
+                                        State is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
+                        (click)="resetForm()">Cancel</button>
+                    <button mat-raised-button color="primary" (click)="saveDistrict()">{{District.DistrictId > 0 ? 'Update' : 'Submit'}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

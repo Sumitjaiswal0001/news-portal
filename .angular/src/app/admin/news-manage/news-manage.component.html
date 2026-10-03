@@ -1,0 +1,142 @@
+<main id="main" class="main">
+
+  <!-- Page Title & Breadcrumb -->
+  <div class="row mb-3">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>Manage News Articles</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+          <li class="breadcrumb-item">News</li>
+          <li class="breadcrumb-item active">Manage Articles</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-sm-4 text-end">
+      <button class="btn btn-primary" (click)="addNewArticle()">
+        <i class="bi bi-plus-circle me-1"></i> + Add New Article
+      </button>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="card">
+      <div class="card-body">
+        
+        <!-- Filters Row (dataTable-top pattern) -->
+        <div class="dataTable-top flex flex-wrap items-center justify-between gap-3 mb-3">
+          
+          <div class="d-flex items-center space-x-2">
+            <select 
+              [(ngModel)]="selectedDistrict" 
+              (change)="applyFilter()"
+              class="form-select form-select-sm"
+              style="width: 220px;"
+            >
+              <option value="">All 24 Districts</option>
+              <option *ngFor="let d of districts" [value]="d.id">📍 {{ d.name }} ({{ d.hindiName }})</option>
+            </select>
+
+            <select 
+              [(ngModel)]="selectedCategory" 
+              (change)="applyFilter()"
+              class="form-select form-select-sm"
+              style="width: 200px;"
+            >
+              <option value="">All Categories</option>
+              <option *ngFor="let c of categories" [value]="c.id">🏷️ {{ c.name }}</option>
+            </select>
+          </div>
+
+          <div class="dataTable-search">
+            <input 
+              class="form-control form-control-sm" 
+              [(ngModel)]="searchQuery" 
+              (input)="applyFilter()"
+              placeholder="Search Title..." 
+              type="text"
+            />
+          </div>
+
+        </div>
+
+        <!-- Responsive Table Container -->
+        <div class="table-container overflow-auto">
+          <table class="table table-bordered table-hover align-middle text-sm">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 50px;">S.No</th>
+                <th style="width: 70px;">Thumbnail</th>
+                <th>Title</th>
+                <th>District</th>
+                <th>Category</th>
+                <th>Author</th>
+                <th>Views</th>
+                <th>Breaking?</th>
+                <th>Trending?</th>
+                <th class="text-end" style="width: 110px;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Skeleton Loader Table Rows -->
+              <ng-container *ngIf="isLoading">
+                <tr *ngFor="let item of [1, 2, 3, 4, 5]">
+                  <td colspan="10" class="p-3">
+                    <div class="d-flex align-items-center gap-3 animate-pulse">
+                      <div class="bg-secondary opacity-25 rounded" style="width: 50px; height: 40px;"></div>
+                      <div class="bg-secondary opacity-25 rounded flex-grow-1" style="height: 20px;"></div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+
+              <ng-container *ngIf="!isLoading">
+                <tr *ngFor="let item of filteredArticles; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <img [src]="item.thumbnailUrl" [alt]="item.title" class="rounded object-fit-cover" style="width: 50px; height: 40px;">
+                </td>
+                <td class="fw-bold text-dark max-w-xs truncate">{{ item.title }}</td>
+                <td>
+                  <span class="badge text-bg-danger">📍 {{ item.districtName }}</span>
+                </td>
+                <td class="text-primary font-medium">{{ item.categoryName }}</td>
+                <td class="text-muted">{{ item.authorName }}</td>
+                <td>
+                  <span class="badge text-bg-info text-dark">👁️ {{ item.viewCount }}</span>
+                </td>
+                <td>
+                  <button 
+                    (click)="toggleBreaking(item)"
+                    [class]="item.isBreaking ? 'badge text-bg-warning text-dark border-0 cursor-pointer':'badge text-bg-secondary border-0 cursor-pointer'"
+                  >
+                    {{ item.isBreaking ? '⚡ Yes' : 'No' }}
+                  </button>
+                </td>
+                <td>
+                  <button 
+                    (click)="toggleTrending(item)"
+                    [class]="item.isTrending ? 'badge text-bg-danger border-0 cursor-pointer':'badge text-bg-secondary border-0 cursor-pointer'"
+                  >
+                    {{ item.isTrending ? '🔥 Yes' : 'No' }}
+                  </button>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-warning me-1" (click)="editArticle(item.id)" title="Edit">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteArticle(item.id)" title="Delete">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </td>
+              </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>

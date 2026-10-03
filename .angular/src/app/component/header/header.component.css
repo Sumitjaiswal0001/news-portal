@@ -1,0 +1,48 @@
+/* ========================================= */
+/* 1. SEAMLESS BREAKING NEWS SCROLLING       */
+/* ========================================= */
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+
+  /* Higher value = slower scrolling */
+  animation: marquee-scroll 90S linear infinite;
+
+  /* Prevent animation from affecting layout */
+  will-change: transform;
+}
+
+
+/* Pause scrolling when mouse is over news */
+
+.group:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+
+@keyframes marquee-scroll {
+
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+
+}
+
+
+/* ========================================= */
+/* 2. HIDE SCROLLBAR FOR CATEGORY NAV        */
+/* ========================================= */
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,20 @@
+﻿# Dependencies
+**/node_modules/
+**/packages/*
+!**/packages/repositories.config
+
+# Build output
+**/bin/
+**/obj/
+**/dist/
+
+# Angular cache & IDE
+.angular/.angular/
+**/.angular/cache/
+**/.vs/
+*.user
+*.suo
+
+# System files
+.DS_Store
+Thumbs.db

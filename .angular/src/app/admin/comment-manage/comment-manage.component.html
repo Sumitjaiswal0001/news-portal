@@ -1,0 +1,59 @@
+<main id="main" class="main">
+
+  <!-- Page Title & Breadcrumb -->
+  <div class="row mb-3">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>Comment Moderation</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+          <li class="breadcrumb-item">News</li>
+          <li class="breadcrumb-item active">Comments</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="card">
+      <div class="card-body pt-3">
+        <h5 class="card-title border-bottom pb-2 mb-3">Total Comments ({{ comments.length }})</h5>
+
+        <div *ngIf="comments.length === 0" class="alert alert-info text-center py-4">
+          No pending comments at present.
+        </div>
+
+        <div class="table-container overflow-auto" *ngIf="comments.length > 0">
+          <table class="table table-bordered table-hover align-middle text-sm">
+            <thead class="table-light">
+              <tr>
+                <th>S.No</th>
+                <th>Reader Name</th>
+                <th>Email / Contact</th>
+                <th>Comment Text</th>
+                <th>Date</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of comments; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td class="fw-bold text-dark">{{ c.userName }}</td>
+                <td class="text-muted small">{{ c.userEmail || 'N/A' }}</td>
+                <td>{{ c.commentText }}</td>
+                <td class="text-muted small">{{ c.createdAt | date:'short' }}</td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-danger" (click)="deleteComment(c.id)">
+                    <i class="bi bi-trash-fill"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>

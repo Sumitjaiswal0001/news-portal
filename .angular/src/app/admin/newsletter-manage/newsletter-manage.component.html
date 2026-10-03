@@ -1,0 +1,629 @@
+<main id="main" class="main">
+
+  <!-- ========================================================= -->
+  <!-- PAGE TITLE & BREADCRUMB -->
+  <!-- ========================================================= -->
+
+  <div class="row mb-3">
+
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>
+        <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>
+        Daily Newsletter / E-Paper Management
+      </h1>
+
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a routerLink="/admin/admin-dashboard">Home</a>
+          </li>
+
+          <li class="breadcrumb-item">
+            Newsletter
+          </li>
+
+          <li class="breadcrumb-item active">
+            Manage Newsletter
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="col-sm-4 text-sm-end mt-2 mt-sm-0">
+
+      <a
+        routerLink="/newsletter"
+        target="_blank"
+        class="btn btn-outline-danger btn-sm rounded-pill px-3"
+      >
+        <i class="bi bi-box-arrow-up-right me-1"></i>
+        View on Website
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- PAGE SECTION -->
+  <!-- ========================================================= -->
+
+  <section class="section dashboard">
+
+    <!-- ======================================================= -->
+    <!-- UPLOAD NEWSLETTER CARD -->
+    <!-- ======================================================= -->
+
+    <div class="card mb-4">
+
+      <div class="card-body">
+
+        <!-- Card Header -->
+
+        <div
+          class="d-flex flex-column flex-md-row
+                 justify-content-between
+                 align-items-md-center
+                 gap-2 mb-4"
+        >
+
+          <div>
+
+            <h5 class="card-title mb-1">
+              <i class="bi bi-cloud-arrow-up-fill text-danger me-2"></i>
+              Add New Daily Newsletter PDF
+            </h5>
+
+            <p class="text-muted small mb-0">
+              Upload and manage day-wise newsletter PDFs for the website
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- UPLOAD FORM -->
+        <!-- ================================================= -->
+
+        <div class="row g-3">
+
+          <!-- Publish Date -->
+
+          <div class="col-12 col-md-6 col-lg-3">
+
+            <label class="form-label fw-bold text-secondary small">
+
+              Publish Date
+
+              <span class="text-danger">*</span>
+
+            </label>
+
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="uploadModel.publishDate"
+              (change)="onDateChange()"
+            />
+
+            <span class="text-muted small mt-1 d-block">
+              Date of the newspaper edition
+            </span>
+
+          </div>
+
+
+          <!-- Edition (Manual Input) -->
+          <div class="col-12 col-md-6 col-lg-3">
+            <label class="form-label fw-bold text-secondary small">
+              Edition
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="uploadModel.edition"
+              placeholder="e.g. Main Edition, Ranchi Edition"
+              list="editionsSuggestions"
+            />
+            <datalist id="editionsSuggestions">
+              <option *ngFor="let ed of editionsList" [value]="ed"></option>
+            </datalist>
+            <span class="text-muted small mt-1 d-block">
+              Enter edition name manually
+            </span>
+          </div>
+
+
+          <!-- Title -->
+
+          <div class="col-12 col-lg-6">
+
+            <label class="form-label fw-bold text-secondary small">
+
+              Title
+
+              <span class="text-danger">*</span>
+
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="uploadModel.title"
+              placeholder="e.g. Satya Samvad - 30 September 2026"
+            />
+
+            <span class="text-muted small mt-1 d-block">
+              Newspaper title and date
+            </span>
+
+          </div>
+
+
+          <!-- PDF File -->
+
+          <div class="col-12">
+
+            <label class="form-label fw-bold text-secondary small">
+
+              Select Newsletter PDF File (.pdf)
+
+              <span class="text-danger">*</span>
+
+            </label>
+
+            <input
+              id="pdfFileInput"
+              type="file"
+              class="form-control"
+              accept=".pdf,application/pdf"
+              (change)="onFileSelected($event)"
+            />
+
+            <!-- File Error -->
+
+            <div
+              *ngIf="fileError"
+              class="text-danger small mt-1 fw-semibold"
+            >
+              ⚠ {{ fileError }}
+            </div>
+
+
+            <!-- Selected File -->
+
+            <div
+              *ngIf="selectedFile"
+              class="text-success small mt-1"
+            >
+
+              ✓ Selected File:
+
+              <strong>
+                {{ selectedFile.name }}
+              </strong>
+
+              ({{ (selectedFile.size / (1024 * 1024)).toFixed(2) }} MB)
+
+            </div>
+
+          </div>
+
+
+          <!-- Submit -->
+
+          <div class="col-12">
+
+            <hr class="my-2">
+
+            <div
+              class="d-flex
+                     flex-column
+                     flex-sm-row
+                     justify-content-end
+                     gap-2"
+            >
+
+              <button
+                type="button"
+                class="btn btn-danger px-4 py-2 fw-bold"
+                [disabled]="isSubmitting || !selectedFile"
+                (click)="submitNewsletter()"
+              >
+
+                <span
+                  *ngIf="isSubmitting"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                ></span>
+
+                <i
+                  *ngIf="!isSubmitting"
+                  class="bi bi-upload me-2"
+                ></i>
+
+                {{
+                  isSubmitting
+                    ? 'Uploading PDF...'
+                    : 'Upload Newsletter'
+                }}
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ======================================================= -->
+    <!-- NEWSLETTER LIST CARD -->
+    <!-- ======================================================= -->
+
+    <div class="card">
+
+      <div class="card-body">
+
+
+        <!-- ================================================= -->
+        <!-- TABLE TOP / SEARCH -->
+        <!-- ================================================= -->
+
+        <div
+          class="dataTable-top
+                 d-flex
+                 flex-column
+                 flex-lg-row
+                 align-items-stretch
+                 align-items-lg-center
+                 justify-content-between
+                 gap-3
+                 mb-3"
+        >
+
+
+          <!-- LEFT SIDE -->
+
+          <div>
+
+            <h5 class="card-title mb-0">
+
+              <i class="bi bi-list-columns text-danger me-2"></i>
+
+              Uploaded Newsletters
+
+              <span class="text-muted">
+                (Total: {{ newsletters.length }})
+              </span>
+
+            </h5>
+
+          </div>
+
+
+          <!-- RIGHT SIDE -->
+
+          <div
+            class="d-flex
+                   flex-column
+                   flex-sm-row
+                   align-items-stretch
+                   gap-2"
+          >
+
+            <!-- Search -->
+
+            <div class="dataTable-search">
+
+              <div class="input-group input-group-sm">
+
+                <span class="input-group-text bg-light">
+                  🔍
+                </span>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="searchQuery"
+                  (input)="applyFilter()"
+                  placeholder="Search..."
+                />
+
+              </div>
+
+            </div>
+
+
+            <!-- Reload -->
+
+            <button
+              type="button"
+              (click)="loadNewsletters()"
+              class="btn btn-light btn-sm"
+              title="Reload"
+            >
+              🔄
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- LOADING -->
+        <!-- ================================================= -->
+
+        <div
+          *ngIf="isLoading"
+          class="text-center py-5 text-muted"
+        >
+
+          <div
+            class="spinner-border text-danger mb-2"
+            role="status"
+          ></div>
+
+          <div>
+            Loading newsletters...
+          </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- EMPTY STATE -->
+        <!-- ================================================= -->
+
+        <div
+          *ngIf="!isLoading && filteredNewsletters.length === 0"
+          class="text-center py-5 text-muted"
+        >
+
+          <i
+            class="bi bi-inbox fs-1 text-secondary opacity-50 d-block mb-2"
+          ></i>
+
+          <p class="mb-0">
+
+            No newsletters found.
+
+            <br class="d-sm-none">
+
+            Upload your first newsletter using the form above.
+
+          </p>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- RESPONSIVE TABLE -->
+        <!-- ================================================= -->
+
+        <div
+          *ngIf="!isLoading && filteredNewsletters.length > 0"
+          class="table-container overflow-auto"
+        >
+
+          <table
+            class="table table-bordered table-hover align-middle text-sm mb-0"
+            style="min-width: 950px;"
+          >
+
+            <!-- TABLE HEADER -->
+
+            <thead class="table-light">
+
+              <tr>
+
+                <th
+                  class="text-nowrap"
+                  style="width: 60px;"
+                >
+                  S.No
+                </th>
+
+                <th
+                  class="text-nowrap"
+                  style="width: 170px;"
+                >
+                  Publish Date
+                </th>
+
+                <th>
+                  Title
+                </th>
+
+                <th
+                  class="text-nowrap"
+                  style="width: 150px;"
+                >
+                  Edition
+                </th>
+
+                <th
+                  class="text-nowrap"
+                  style="width: 130px;"
+                >
+                  PDF File
+                </th>
+
+                <th
+                  class="text-nowrap"
+                  style="width: 170px;"
+                >
+                  Upload Time
+                </th>
+
+                <th
+                  class="text-end text-nowrap"
+                  style="width: 100px;"
+                >
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <!-- TABLE BODY -->
+
+            <tbody>
+
+              <tr
+                *ngFor="
+                  let item of filteredNewsletters;
+                  let i = index
+                "
+              >
+
+                <!-- S.No -->
+
+                <td class="fw-bold text-muted">
+                  {{ i + 1 }}
+                </td>
+
+
+                <!-- Publish Date -->
+
+                <td>
+
+                  <div
+                    class="d-flex
+                           flex-column
+                           align-items-start
+                           gap-1"
+                  >
+
+                    <span
+                      class="badge bg-dark rounded-pill"
+                    >
+                      {{ getDayName(item.PublishDate) }}
+
+                      {{ item.PublishDate | date:'dd MMM yyyy' }}
+
+                    </span>
+<!-- 
+                    <strong class="text-dark text-nowrap">
+
+                      {{ item.PublishDate | date:'dd MMM yyyy' }}
+
+                    </strong> -->
+
+                  </div>
+
+                </td>
+
+
+                <!-- Title -->
+
+                <td>
+
+                  <div
+                    class="fw-bold text-dark"
+                    style="
+                      min-width: 220px;
+                      max-width: 420px;
+                      white-space: normal;
+                      word-break: break-word;
+                    "
+                  >
+
+                    {{ item.Title }}
+
+                  </div>
+
+                </td>
+
+
+                <!-- Edition -->
+
+                <td>
+
+                  <span
+                    class="badge
+                           bg-danger-subtle
+                           text-danger
+                           border
+                           border-danger-subtle
+                           rounded-pill"
+                  >
+
+                    📍 {{ item.Edition || 'Main Edition' }}
+
+                  </span>
+
+                </td>
+
+
+                <!-- PDF -->
+
+                <td>
+
+                  <a
+                    [href]="item.PdfUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                  >
+
+                    <i class="bi bi-file-earmark-pdf me-1"></i>
+
+                    View
+
+                  </a>
+
+                </td>
+
+
+                <!-- Created Date -->
+
+                <td class="small text-muted text-nowrap">
+
+                  {{ item.CreatedOn | date:'short' }}
+
+                </td>
+
+
+                <!-- Actions -->
+
+                <td class="text-end">
+
+                  <button
+                    type="button"
+                    (click)="deleteNewsletter(item)"
+                    class="btn btn-sm btn-danger"
+                    title="Delete"
+                  >
+
+                    <i class="bi bi-trash"></i>
+
+                  </button>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>

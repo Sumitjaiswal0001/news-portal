@@ -1,0 +1,103 @@
+<app-header></app-header>
+
+<main class="bg-slate-50 min-h-screen py-5">
+  <div class="container">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-5">
+      <div class="bg-slate-900 text-white p-4 p-md-5 text-center position-relative">
+        <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill mb-3">व्यापार एवं विज्ञापन इंक्वायरी</span>
+        <h1 class="fw-bold mb-3 font-serif text-white">सत्य संवाद पर विज्ञापन दें (Advertise With Us)</h1>
+        <p class="lead text-white-50 max-w-700 mx-auto">झारखण्ड और बिहार के लाखों पाठकों तक अपने ब्रांड, उत्पाद और सेवाओं का व्यापक प्रचार करें।</p>
+      </div>
+
+      <div class="card-body p-4 p-md-5">
+        <div class="row g-4 mb-5">
+          <div class="col-md-3">
+            <div class="card border-danger border-2 h-100 text-center p-4 rounded-4 bg-white shadow-sm">
+              <i class="bi bi-layout-three-columns display-5 text-danger mb-3"></i>
+              <h5 class="fw-bold text-dark">हेडर / टॉप बैनर</h5>
+              <p class="text-muted small mb-0">वेबसाइट पर सबसे शीर्ष स्थान पर उच्च दृश्यता वाला विज्ञापन स्लॉट।</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border-danger border-2 h-100 text-center p-4 rounded-4 bg-white shadow-sm">
+              <i class="bi bi-square-half display-5 text-danger mb-3"></i>
+              <h5 class="fw-bold text-dark">साइडबार बैनर</h5>
+              <p class="text-muted small mb-0">समाचार लेखों के साथ साइड में प्रदर्शित होने वाला लक्षित विज्ञापन।</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border-danger border-2 h-100 text-center p-4 rounded-4 bg-white shadow-sm">
+              <i class="bi bi-file-earmark-post display-5 text-danger mb-3"></i>
+              <h5 class="fw-bold text-dark">स्पॉन्सर्ड आर्टिकल</h5>
+              <p class="text-muted small mb-0">ब्रांड स्टोरी और विस्तृत उत्पाद विवरण का विशेष संपादकीय कवरेज।</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border-danger border-2 h-100 text-center p-4 rounded-4 bg-white shadow-sm">
+              <i class="bi bi-youtube display-5 text-danger mb-3"></i>
+              <h5 class="fw-bold text-dark">यूट्यूब लाइव / वीडियो ऐड</h5>
+              <p class="text-muted small mb-0">हमारे यूट्यूब चैनल और वीडियो समाचार बुलेटिन के दौरान वीडियो विज्ञापन।</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-light p-4 p-md-5 rounded-4 border">
+          <h3 class="fw-bold text-dark mb-4 font-serif"><i class="bi bi-calculator-fill text-danger me-2"></i>विज्ञापन दर एवं पूछताछ फॉर्म</h3>
+          
+          <div *ngIf="submitted" class="alert alert-success rounded-3 p-4 mb-0">
+            <h5 class="fw-bold mb-1"><i class="bi bi-check-circle-fill me-2"></i>आपकी पूछताछ दर्ज कर ली गई है!</h5>
+            <p class="mb-0">हमारी विज्ञापन टीम जल्द ही आपको मीडिया किट और विशेष दरों की जानकारी के साथ संपर्क करेगी।</p>
+          </div>
+
+          <form (ngSubmit)="submitAdQuery()" #adQueryForm="ngForm" *ngIf="!submitted">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-dark">कंपनी / ब्रांड का नाम *</label>
+                <input type="text" class="form-control form-control-lg rounded-3" name="companyName" [(ngModel)]="adForm.companyName" required placeholder="जैसे: एबीसी प्राइवेट लिमिटेड">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-dark">संपर्क व्यक्ति का नाम *</label>
+                <input type="text" class="form-control form-control-lg rounded-3" name="contactPerson" [(ngModel)]="adForm.contactPerson" required placeholder="आपका नाम">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-dark">मोबाइल नंबर *</label>
+                <input type="tel" class="form-control form-control-lg rounded-3" name="phone" [(ngModel)]="adForm.phone" required placeholder="10-अंकीय मोबाइल नंबर">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-dark">ईमेल आईडी</label>
+                <input type="email" class="form-control form-control-lg rounded-3" name="email" [(ngModel)]="adForm.email" placeholder="example@brand.com">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-dark">विज्ञापन का प्रकार</label>
+                <select class="form-select form-select-lg rounded-3" name="adType" [(ngModel)]="adForm.adType">
+                  <option value="Header Banner">हेडर टॉप बैनर (Header Banner)</option>
+                  <option value="Sidebar Banner">साइडबार बैनर (Sidebar Banner)</option>
+                  <option value="In-Article Banner">लेख के बीच बैनर (In-Article)</option>
+                  <option value="Sponsored Article">स्पॉन्सर्ड आर्टिकल (Sponsored Post)</option>
+                  <option value="Video Ad">वीडियो विज्ञापन (Video/YouTube Ad)</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-dark">अवधि (Duration)</label>
+                <select class="form-select form-select-lg rounded-3" name="duration" [(ngModel)]="adForm.duration">
+                  <option value="1 Week">1 सप्ताह</option>
+                  <option value="1 Month">1 माह</option>
+                  <option value="3 Months">3 माह</option>
+                  <option value="6 Months">6 माह</option>
+                  <option value="1 Year">1 वर्ष</option>
+                </select>
+              </div>
+              <div class="col-12 mt-4 text-center">
+                <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 fw-bold shadow-sm" [disabled]="!adQueryForm.valid">
+                  <i class="bi bi-telephone-outbound-fill me-2"></i>विज्ञापन दरों के लिए संपर्क करें
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

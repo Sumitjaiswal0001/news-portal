@@ -1,0 +1,204 @@
+<main id="main" class="main">
+
+  <!-- Page Title & Breadcrumb -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="pagetitle dashboard mb-0">
+      <h1 class="fw-bolder text-dark mb-1">Editorial Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard"
+              class="text-decoration-none text-muted">Home</a></li>
+          <li class="breadcrumb-item text-muted">Dashboard</li>
+          <li class="breadcrumb-item active fw-medium">Overview</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="text-end">
+      <button class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm me-2" (click)="navigateToEditor()">
+        <i class="bi bi-plus-lg me-2"></i> New Article
+      </button>
+      <a routerLink="/home" target="_blank"
+        class="btn btn-white border rounded-pill px-4 fw-medium shadow-sm text-dark hover-bg-light">
+        <i class="bi bi-box-arrow-up-right me-2 text-muted"></i> Live Site
+      </a>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+
+    <!-- Stats Cards Row -->
+    <div class="row g-4 mb-4">
+
+      <!-- Total Articles Card -->
+      <div class="col-md-4">
+        <div class="card dashboard-card h-100">
+          <div class="card-body p-4">
+            <h6 class="text-muted text-uppercase tracking-wider fw-bold mb-3"
+              style="font-size: 0.75rem; letter-spacing: 0.5px;">Total Articles</h6>
+            <div class="d-flex align-items-center">
+              <div class="metric-icon-box text-primary bg-primary-subtle">
+                <i class="bi bi-journal-richtext fs-2"></i>
+              </div>
+              <div class="ps-3 flex-grow-1">
+                <h3 class="fw-bolder mb-1 text-dark">{{ stats.totalArticles }}</h3>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="badge bg-success-subtle text-success border border-success-subtle rounded-pill small px-2 py-1 fw-bold">
+                    <i class="bi bi-check-circle-fill me-1"></i>{{ stats.publishedArticles }} Published
+                  </span>
+                  <span class="text-muted small ms-2 fw-medium">{{ stats.draftArticles }} Drafts</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- District Coverage Card -->
+      <div class="col-md-4">
+        <div class="card dashboard-card h-100">
+          <div class="card-body p-4">
+            <h6 class="text-muted text-uppercase tracking-wider fw-bold mb-3"
+              style="font-size: 0.75rem; letter-spacing: 0.5px;">Districts Coverage</h6>
+            <div class="d-flex align-items-center">
+              <div class="metric-icon-box text-warning bg-warning-subtle">
+                <i class="bi bi-geo-alt-fill fs-2"></i>
+              </div>
+              <div class="ps-3 flex-grow-1">
+                <h3 class="fw-bolder mb-1 text-dark">24 Districts</h3>
+                <div class="d-flex align-items-center mt-1">
+                  <span class="text-success small fw-bold d-flex align-items-center">
+                    <i class="bi bi-graph-up-arrow me-1"></i> 100% Active Coverage
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Views Card -->
+      <div class="col-md-4">
+        <div class="card dashboard-card h-100">
+          <div class="card-body p-4">
+            <h6 class="text-muted text-uppercase tracking-wider fw-bold mb-3"
+              style="font-size: 0.75rem; letter-spacing: 0.5px;">Total Article Views</h6>
+            <div class="d-flex align-items-center">
+              <div class="metric-icon-box text-info bg-info-subtle">
+                <i class="bi bi-bar-chart-fill fs-2"></i>
+              </div>
+              <div class="ps-3 flex-grow-1">
+                <h3 class="fw-bolder mb-1 text-dark">{{ stats.totalViews }}</h3>
+                <div class="d-flex align-items-center mt-1">
+                  <span class="text-info-emphasis small fw-bold d-flex align-items-center">
+                    <i class="bi bi-people-fill me-1"></i> Live Reader Impressions
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recent News Table -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <h5 class="card-title text-dark fw-bold mb-0 p-0">Recent News Articles</h5>
+          <a routerLink="/admin/news"
+            class="btn btn-sm btn-light border fw-medium rounded-pill px-4 text-muted hover-bg-light">
+            View All Articles <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle custom-table">
+            <thead class="bg-light">
+              <tr>
+                <th class="text-muted text-uppercase small fw-bold py-3 rounded-start" style="width: 80px;">Media</th>
+                <th class="text-muted text-uppercase small fw-bold py-3">Title & Category</th>
+                <th class="text-muted text-uppercase small fw-bold py-3">District</th>
+                <th class="text-muted text-uppercase small fw-bold py-3">Views</th>
+                <th class="text-muted text-uppercase small fw-bold py-3">Breaking?</th>
+                <th class="text-muted text-uppercase small fw-bold py-3 text-end rounded-end">Action</th>
+              </tr>
+            </thead>
+            <tbody class="border-top-0">
+              <tr *ngFor="let item of recentArticles" class="border-bottom">
+
+                <!-- Thumbnail -->
+                <td class="py-3">
+                  <img [src]="item.thumbnailUrl" [alt]="item.title" class="rounded-3 shadow-sm object-fit-cover"
+                    style="width: 60px; height: 48px;">
+                </td>
+
+                <!-- Title & Category Stacked -->
+                <td class="py-3">
+                  <div class="fw-bolder text-dark mb-1"
+                    style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ item.title }}
+                  </div>
+                  <div class="small fw-semibold text-primary">
+                    <i class="bi bi-tag-fill me-1 opacity-50"></i> {{ item.categoryName }}
+                  </div>
+                </td>
+
+                <!-- District -->
+                <td class="py-3">
+                  <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2 border border-danger-subtle">
+                    <i class="bi bi-geo-alt-fill me-1"></i> {{ item.districtName }}
+                  </span>
+                </td>
+
+                <!-- Views -->
+                <!-- Views -->
+                <td class="py-3">
+                  <span class="badge bg-light border border-info text-dark rounded-pill px-3 py-2 shadow-sm">
+                    <i class="bi bi-eye-fill text-info me-1"></i> {{ item.viewCount || 0 }}
+                  </span>
+                </td>
+                <!-- Breaking Toggle -->
+                <td class="py-3">
+                  <button (click)="toggleBreaking(item)"
+                    class="badge rounded-pill px-3 py-2 border-0 cursor-pointer transition-all"
+                    [ngClass]="item.isBreaking ? 'bg-warning text-dark shadow-sm' : 'bg-secondary text-white opacity-75'">
+                    <i class="bi" [ngClass]="item.isBreaking ? 'bi-lightning-charge-fill' : 'bi-dash-circle'"></i>
+                    {{ item.isBreaking ? 'Yes' : 'No' }}
+                  </button>
+                </td>
+
+                <!-- Actions -->
+                <td class="py-3 text-end">
+                  <button class="btn btn-sm btn-light border text-primary rounded-circle me-2 shadow-sm"
+                    (click)="navigateToEditor(item.id)" title="Edit">
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                  <button class="btn btn-sm btn-light border text-danger rounded-circle shadow-sm"
+                    (click)="deleteArticle(item.id)" title="Delete">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </td>
+
+              </tr>
+
+              <!-- Empty State -->
+              <tr *ngIf="recentArticles.length === 0">
+                <td colspan="6" class="text-center py-5">
+                  <div class="text-muted mb-3"><i class="bi bi-journal-x fs-1 opacity-50"></i></div>
+                  <h6 class="fw-bold text-dark">No Articles Found</h6>
+                  <p class="text-muted small">You haven't published any news articles yet.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+</main>

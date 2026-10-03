@@ -1,0 +1,279 @@
+<main id="main" class="main">
+
+  <!-- Page Title & Breadcrumb -->
+  <div class="row mb-3 align-items-center">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1 class="fw-bold text-dark mb-1">{{ isEditMode ? 'Edit Article' : 'Post New Article' }}</h1>
+      <nav>
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+          <li class="breadcrumb-item"><a routerLink="/admin/news">News</a></li>
+          <li class="breadcrumb-item active">{{ isEditMode ? 'Edit' : 'New Article' }}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-sm-4 text-end">
+      <button class="btn btn-outline-secondary me-2 rounded-pill px-3" (click)="cancel()">Cancel</button>
+      <button class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm" (click)="saveArticle()">
+        <i class="bi bi-check-circle me-1"></i> {{ isEditMode ? 'Save Updates' : 'Publish Article' }}
+      </button>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body p-4">
+        
+        <form #newsForm="ngForm">
+          <div class="row g-3">
+            
+            <!-- Title -->
+            <div class="col-12">
+              <label class="form-label fw-bold text-dark fs-5">Main Headline Title *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-lg fw-bold rounded-3" 
+                [(ngModel)]="articleForm.title" 
+                name="title"
+                placeholder="e.g. Jharkhand Cabinet Approves New Infrastructure Projects..." 
+                required
+              />
+            </div>
+
+            <!-- Subtitle -->
+            <div class="col-12">
+              <label class="form-label text-muted fw-semibold">Subtitle / Summary Teaser</label>
+              <input 
+                type="text" 
+                class="form-control rounded-3" 
+                [(ngModel)]="articleForm.subtitle" 
+                name="subtitle"
+                placeholder="Brief summary teaser..." 
+              />
+            </div>
+
+            <!-- District Selection -->
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Select District *</label>
+              <select class="form-select rounded-3" [(ngModel)]="articleForm.districtName" name="districtName" required>
+                <!-- Bind to the name directly -->
+                <option *ngFor="let d of districts" [value]="d.name">
+                  📍 {{ d.name }} ({{ d.hindiName }})
+                </option>
+              </select>
+            </div>
+
+            <!-- Category Selection -->
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Select Category *</label>
+              <select class="form-select rounded-3" [(ngModel)]="articleForm.categoryId" name="categoryId" required>
+                <option *ngFor="let c of categories" [value]="c.id">
+                  🏷️ {{ c.name }} ({{ c.hindiName }})
+                </option>
+              </select>
+            </div>
+
+            <!-- Reporter Name -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Author / Reporter Name</label>
+              <input 
+                type="text" 
+                class="form-control rounded-3" 
+                [(ngModel)]="articleForm.authorName" 
+                name="authorName"
+                placeholder="Correspondent / Author name..." 
+              />
+            </div>
+
+            <!-- YouTube Video URL -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold text-danger"><i class="bi bi-youtube me-1"></i>YouTube Video URL</label>
+              <input 
+                type="url" 
+                class="form-control rounded-3" 
+                [(ngModel)]="articleForm.youtubeUrl" 
+                name="youtubeUrl"
+                placeholder="https://www.youtube.com/watch?v=..." 
+              />
+              <span class="form-text text-muted small">Supports watch links, shorts, or embed URLs.</span>
+            </div>
+
+            <!-- YouTube Video Preview Box -->
+            <div class="col-12" *ngIf="articleForm.youtubeUrl">
+              <div class="p-3 border rounded-3 bg-light">
+                <h6 class="fw-bold mb-2 text-danger"><i class="bi bi-youtube me-1"></i>YouTube Embed Video Preview</h6>
+                <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm" style="max-width: 560px;">
+                  <iframe 
+                    [src]="articleForm.youtubeUrl | safeUrl" 
+                    title="YouTube video player" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                  </iframe>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image Upload & Preview -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Upload Image (Max 500 KB Limit) *</label>
+              <input 
+                type="file" 
+                accept="image/*" 
+                class="form-control rounded-3" 
+                (change)="onFileSelected($event)" 
+              />
+              <span class="form-text text-danger small">* File size must not exceed 500 KB.</span>
+            </div>
+
+            <!-- Image URL Direct -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Direct Image URL</label>
+              <input 
+                type="text" 
+                class="form-control rounded-3" 
+                [(ngModel)]="articleForm.thumbnailUrl" 
+                name="thumbnailUrl"
+                placeholder="https://images.unsplash.com/..." 
+              />
+            </div>
+
+            <!-- Image Preview Box -->
+            <div class="col-12" *ngIf="articleForm.thumbnailUrl">
+              <div class="p-2 border rounded-3 bg-light d-flex align-items-center gap-3">
+                <img [src]="articleForm.thumbnailUrl" alt="Preview" class="rounded shadow-sm" style="max-height: 90px; max-width: 140px; object-fit: cover;">
+                <div>
+                  <h6 class="fw-bold mb-1 text-success"><i class="bi bi-image me-1"></i>Image Preview</h6>
+                  <p class="small text-muted mb-0">This image will be displayed on the homepage and article cards.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Options Checkboxes -->
+            <div class="col-12 bg-light p-3 rounded-3 border">
+              <div class="d-flex flex-wrap gap-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="articleForm.isBreaking" name="isBreaking" id="chkBreaking">
+                  <label class="form-check-label fw-bold text-danger" for="chkBreaking">
+                    ⚡ Breaking News Ticker
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="articleForm.isTrending" name="isTrending" id="chkTrending">
+                  <label class="form-check-label fw-bold text-warning" for="chkTrending">
+                    🔥 Trending Story Sidebar
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="articleForm.isFeatured" name="isFeatured" id="chkFeatured">
+                  <label class="form-check-label fw-bold text-primary" for="chkFeatured">
+                    ⭐ Featured Lead Story
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Article Rich Text Formatting Toolbar & Editor -->
+            <div class="col-12">
+              <label class="form-label fw-bold text-dark fs-6">Detailed News Article Content & Formatting Toolbar *</label>
+
+              <!-- Enhanced Rich Text Toolbar -->
+              <div class="border rounded-top bg-light p-2 d-flex flex-wrap gap-1 align-items-center">
+                
+                <!-- History -->
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('undo')" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('redo')" title="Redo"><i class="bi bi-arrow-clockwise"></i></button>
+
+                <div class="vr mx-1"></div>
+
+                <!-- Font Family & Size Dropdowns -->
+                <select class="form-select form-select-sm border w-auto" (change)="onFontChange($event)" title="Font Family" style="cursor: pointer;">
+                  <option value="" disabled selected>Font</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Verdana">Verdana</option>
+                </select>
+
+                <select class="form-select form-select-sm border w-auto" (change)="onFontSizeChange($event)" title="Font Size" style="cursor: pointer;">
+                  <option value="" disabled selected>Size</option>
+                  <option value="1">Small</option>
+                  <option value="3">Normal</option>
+                  <option value="5">Large</option>
+                  <option value="7">Huge</option>
+                </select>
+
+                <div class="vr mx-1"></div>
+
+                <!-- Basic Formatting -->
+                <button type="button" class="btn btn-sm btn-white border fw-bold" (mousedown)="$event.preventDefault()" (click)="formatText('bold')" title="Bold"><i class="bi bi-type-bold"></i></button>
+                <button type="button" class="btn btn-sm btn-white border fst-italic" (mousedown)="$event.preventDefault()" (click)="formatText('italic')" title="Italic"><i class="bi bi-type-italic"></i></button>
+                <button type="button" class="btn btn-sm btn-white border text-decoration-underline" (mousedown)="$event.preventDefault()" (click)="formatText('underline')" title="Underline"><i class="bi bi-type-underline"></i></button>
+                <button type="button" class="btn btn-sm btn-white border text-decoration-line-through" (mousedown)="$event.preventDefault()" (click)="formatText('strikeThrough')" title="Strikethrough"><i class="bi bi-type-strikethrough"></i></button>
+                <button type="button" class="btn btn-sm btn-white border text-danger" (mousedown)="$event.preventDefault()" (click)="formatText('removeFormat')" title="Clear Formatting"><i class="bi bi-eraser-fill"></i></button>
+
+                <div class="vr mx-1"></div>
+
+                <!-- Colors -->
+                <div class="d-flex align-items-center gap-1">
+                  <span class="small fw-semibold text-muted" title="Text Color"><i class="bi bi-palette"></i></span>
+                  <input type="color" class="form-control form-control-color form-control-sm p-0 border-0" (focus)="saveSelection()" (click)="saveSelection()" (change)="changeTextColor($event)" title="Text Color" style="width: 25px; height: 25px;">
+                </div>
+                <div class="d-flex align-items-center gap-1 ms-1">
+                  <span class="small fw-semibold text-muted" title="Highlight Color"><i class="bi bi-highlighter"></i></span>
+                  <input type="color" class="form-control form-control-color form-control-sm p-0 border-0" value="#ffff00" (focus)="saveSelection()" (click)="saveSelection()" (change)="changeBgColor($event)" title="Highlight Color" style="width: 25px; height: 25px;">
+                </div>
+
+                <div class="vr mx-1"></div>
+
+                <!-- Headings & Blocks -->
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('formatBlock', '<p>')" title="Paragraph"><b>P</b></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('formatBlock', '<h3>')" title="Heading 3"><b>H3</b></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('formatBlock', '<h4>')" title="Heading 4"><b>H4</b></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('formatBlock', '<blockquote>')" title="Blockquote"><i class="bi bi-quote"></i></button>
+
+                <div class="vr mx-1"></div>
+
+                <!-- Alignment -->
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('justifyLeft')" title="Align Left"><i class="bi bi-text-left"></i></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('justifyCenter')" title="Align Center"><i class="bi bi-text-center"></i></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('justifyRight')" title="Align Right"><i class="bi bi-text-right"></i></button>
+
+                <div class="vr mx-1"></div>
+
+                <!-- Lists & Inserts -->
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('insertUnorderedList')" title="Bullet List"><i class="bi bi-list-ul"></i></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('insertOrderedList')" title="Numbered List"><i class="bi bi-list-ol"></i></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="addLink()" title="Insert Link"><i class="bi bi-link-45deg fs-6"></i></button>
+                <button type="button" class="btn btn-sm btn-white border" (mousedown)="$event.preventDefault()" (click)="formatText('insertHorizontalRule')" title="Horizontal Line"><i class="bi bi-hr"></i></button>
+
+              </div>
+
+              <!-- ContentEditable Div -->
+              <div 
+                #editorDiv 
+                contenteditable="true" 
+                class="form-control rounded-bottom p-4 shadow-inner rich-text-content" 
+                style="min-height: 400px; background-color: #ffffff; overflow-y: auto; font-size: 16px; line-height: 1.6;"
+                (keyup)="saveSelection(); syncEditorContent()"
+                (mouseup)="saveSelection(); syncEditorContent()"
+                (input)="saveSelection(); syncEditorContent()">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="mt-4 text-end">
+            <button type="button" class="btn btn-outline-secondary me-2 rounded-pill px-4" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn btn-danger px-5 rounded-pill fw-bold shadow-sm" (click)="saveArticle()">
+              <i class="bi bi-save me-1"></i> {{ isEditMode ? 'Update Article' : 'Publish Article' }}
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+</main>
